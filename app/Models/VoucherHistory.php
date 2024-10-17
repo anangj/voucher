@@ -10,7 +10,7 @@ class VoucherHistory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['voucher_id', 'action', 'performed_by','voucher_detail_id'];
+    protected $fillable = ['voucher_id', 'action', 'performed_by','voucher_detail_id', 'voucher_no', 'bill_no', 'bill_date'];
 
     public function voucher()
     {

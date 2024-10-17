@@ -18,7 +18,9 @@ class RedeemController extends Controller
             'voucher_no' => 'required|string|exists:voucher_details,voucher_no',
             'rm_no' => 'required|string',
             'registration_no' => 'required|string',
-            'patient_name' => 'required|string'
+            'patient_name' => 'required|string',
+            'bill_no' => 'required|string',
+            'bill_date' => 'required|string'
         ]);
 
         // Check for validation errors
@@ -49,8 +51,11 @@ class RedeemController extends Controller
 
         VoucherHistory::create([
             'voucher_detail_id' => $voucher->id,
+            'voucher_no' => $request->input('voucher_no'),
             'performed_by' => $request->input('patient_name'),
-            'action' => 'redeemed'
+            'action' => 'redeemed',
+            'bill_no' => $request->input('bill_no'),
+            'bill_date' => $request->input('bill_date'),
         ]);
 
         return response()->json([
