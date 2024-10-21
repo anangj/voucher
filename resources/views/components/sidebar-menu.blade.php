@@ -64,6 +64,17 @@
                 </li>
             @endcan
 
+            @can('menu report')
+                <li>
+                    <a href="{{ route('reports.index') }}" class="navItem {{ (request()->is('reports*')) ? 'active' : '' }}">
+                        <span class="flex items-center">
+                            <iconify-icon class=" nav-icon" icon="carbon:report-data"></iconify-icon>
+                            <span>{{ __('Report') }}</span>
+                        </span>
+                    </a>
+                </li>
+            @endcan
+
             {{-- @can('menu redeem')
                 <li>
                     <a href="{{ route('redeem.index') }}" class="navItem {{ (request()->is('redeem*')) ? 'active' : '' }}">

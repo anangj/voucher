@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\VoucherSalesExport;
 use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppsController;
@@ -19,9 +20,11 @@ use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\PackageVoucherController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RedeemController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\VoucherDetailController;
 use App\Http\Controllers\VoucherHeaderController;
+use Maatwebsite\Excel\Facades\Excel;
 
 require __DIR__ . '/auth.php';
 
@@ -84,6 +87,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::resource('redeem', RedeemController::class);
     Route::post('/redeem/create', [RedeemController::class, 'create'])->name('redeem.create');
 
+    Route::resource('reports', ReportController::class);
+
+    Route::get('export-vouchers', function() {
+        return Excel::download(new VoucherSalesExport, 'voucher_sales.xlsx');
+    })->name('export.vouchers');
 
     Route::get('vouchers/assign/{paketVoucherId}', [VoucherController::class, 'assign'])->name('vouchers.assign');
 });

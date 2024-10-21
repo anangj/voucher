@@ -12,6 +12,16 @@ class Payment extends Model
 
     protected $fillable = ['id', 'patient_id', 'voucher_header_id', 'amount', 'purchase_date', 'payment_method', 'status'];
 
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function voucherHeader()
+    {
+        return $this->belongsTo(VoucherHeader::class);
+    }
+
     // This tells Laravel the primary key is not an integer
     public $incrementing = false;
 

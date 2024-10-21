@@ -123,7 +123,7 @@
                                                 @endif --}}
 
                                                 @can('voucher delete')
-                                                <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this voucher?') }}')">
+                                                <form id="deleteForm{{$voucher->id}}" action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" onclick="sweetAlertDelete(event, 'deleteForm{{ $voucher->id }}')" type="submit">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">
@@ -228,6 +228,23 @@
                     search: "Search:",
                 },
             });
+        </script>
+        <script>
+            function sweetAlertDelete(event, formId) {
+                event.preventDefault();
+                let form = document.getElementById(formId);
+                Swal.fire({
+                    title: '@lang('Are you sure ? ')',
+                    icon : 'question',
+                    showDenyButton: true,
+                    confirmButtonText: '@lang('Delete ')',
+                    denyButtonText: '@lang(' Cancel ')',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                })
+            }
         </script>
         <script>
             document.getElementById('filterToggle').addEventListener('click', function() {

@@ -18,6 +18,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\SendVoucherEmailJob;
+use Illuminate\Support\Carbon;
 
 class VoucherHeaderController extends Controller
 {
@@ -191,12 +192,6 @@ class VoucherHeaderController extends Controller
         $selectedPatients = $request->input('patient_id');
         $patientName = $mergedData[0]['name'];
 
-        // Create directory in storage for the patient
-        $patientDirectory = 'vouchers/' . $patientName;
-        if (!Storage::exists($patientDirectory)) {
-            Storage::makeDirectory($patientDirectory);
-        }
-
         // Gather family members from the first patient in merged_data (assuming merged_data contains family members)
         $familyMembers = $mergedData[0]['family_members'] ?? [];
 
@@ -271,6 +266,14 @@ class VoucherHeaderController extends Controller
                 'qrCode' => $qrCodeBase64,
             ];
             $pdf = PDF::loadView('voucher-headers.layout', $data);
+
+            $currentDate = Carbon::now()->format('Y-m-d');
+
+            // Create directory in storage for the patient
+            $patientDirectory = 'vouchers/' . $patientName . '/' . $currentDate;
+            if (!Storage::exists($patientDirectory)) {
+                Storage::makeDirectory($patientDirectory);
+            }
 
             // Save PDF to storage
             $pdfFileName = $voucherNo . '.pdf';
@@ -431,8 +434,9 @@ class VoucherHeaderController extends Controller
      */
     public function destroy($id)
     {
-        //
-        dd('des');
+        VoucherHeader::destroy($id);
+
+        return redirect()->route('vouchers.index')->with('message', 'Voucher deleted successfully.');
     }
 
     public function validateVoucher(Request $request)

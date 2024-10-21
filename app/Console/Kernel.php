@@ -18,13 +18,23 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->job(new SendVoucherReminderJob())->everyMinute()
-        ->onSuccess(function() {
-            Log::info("SendVoucherReminderJob success send message");
-        })
-        ->onFailure(function() {
-            Log::info('SendVoucherReminderJob cannot send message');
-        });
+        $schedule->call(function () {
+            // Call the controller method directly
+            app(\App\Http\Controllers\ReminderController::class)->sendVoucherReminders();
+        })->everyMinute();
+
+        $schedule->call(function () {
+            // Call the controller method directly
+            app(\App\Http\Controllers\ReminderController::class)->updateExpiredVoucher();
+        })->dailyAt('14:40');
+
+        // $schedule->job(new SendVoucherReminderJob())->everyMinute()
+        // ->onSuccess(function() {
+        //     Log::info("SendVoucherReminderJob success send message");
+        // })
+        // ->onFailure(function() {
+        //     Log::info('SendVoucherReminderJob cannot send message');
+        // });
     }
 
     /**

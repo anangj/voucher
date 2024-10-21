@@ -35,30 +35,30 @@ class SendVoucherReminderJob implements ShouldQueue
     public function handle()
     {
         // Set reminder dates based on current date
-        $firstReminderDate = Carbon::now()->addDays(7);
-        $secondReminderDate = Carbon::now()->addDay(1);
+        $firstReminderDate = Carbon::now()->addDays(7)->format('Y-m-d');
+        $secondReminderDate = Carbon::now()->addDay(1)->format('Y-m-d');
 
         // Query vouchers expiring in 7 days and haven't been reminded
         $firstReminderVouchers = VoucherHeader::where('expiry_date', $firstReminderDate)
-            ->where('first_reminder_sent', false)
+            ->where('reminder_1', false)
             ->get();
 
         // Query vouchers expiring in 1 day and haven't been reminded
         $secondReminderVouchers = VoucherHeader::where('expiry_date', $secondReminderDate)
-            ->where('second_reminder_sent', false)
+            ->where('reminder_2', false)
             ->get();
 
         // Send reminders for first reminder (7 days before expiry)
         foreach ($firstReminderVouchers as $voucher) {
             $this->sendReminder($voucher, '7 days left until your voucher expires!');
-            $voucher->first_reminder_sent = true;
+            $voucher->reminder_1 = true;
             $voucher->save();
         }
 
         // Send reminders for second reminder (1 day before expiry)
         foreach ($secondReminderVouchers as $voucher) {
             $this->sendReminder($voucher, '1 day left until your voucher expires!');
-            $voucher->second_reminder_sent = true;
+            $voucher->reminder_2 = true;
             $voucher->save();
         }
     }

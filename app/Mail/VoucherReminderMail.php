@@ -33,7 +33,7 @@ class VoucherReminderMail extends Mailable
                     ->subject('Voucher Expiry Reminder')
                     ->with([
                         'voucher' => $this->voucher,
-                        'messageContent' => $this->messageContent
+                        'data' => $this->messageContent
                     ]);
     }
 
