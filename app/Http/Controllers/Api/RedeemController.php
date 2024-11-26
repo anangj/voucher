@@ -9,7 +9,7 @@ use App\Models\VoucherHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RedeemController extends Controller
+class RedeemApiController extends Controller
 {
     public function redeemVoucher(Request $request)
     {
@@ -64,4 +64,51 @@ class RedeemController extends Controller
             'redeemed_at' => $voucher->using_date,
         ], 200);
     }
+
+    public function getListVoucher(Request $request)
+    {
+        // Validate the input
+        $request->validate([
+            'voucher_no' => 'required|string|max:255', // Ensure voucher_no is provided and valid
+        ]);
+
+        $voucherNo = $request->input('voucher_no');
+
+        // Retrieve voucher details with relationships
+        $voucherHeader = VoucherHeader::with([
+            'voucherDetail' => function ($query) {
+                $query->where('is_used', false); // Unused vouchers
+            },
+        ])
+        ->where('voucher_header_no', $voucherNo)
+        ->where('expiry_date', '>=', now()->format('Y-m-d')) // Ensure the voucher is not expired
+        ->first();
+            
+        if ($voucherHeader) {
+            $voucherDetails = $voucherHeader->voucherDetail;
+        
+            // Check if there are unused vouchers
+            if ($voucherDetails->isEmpty()) {
+                return response()->json(['message' => 'No unused vouchers available or the voucher has expired.'], 404);
+            }
+        } else {
+            return response()->json(['message' => 'Voucher not found or expired.'], 404);
+        }
+        
+        // Format response
+        $response = [
+            'voucher_details' => $voucherHeader->voucherDetail->map(function ($detail) {
+                return [
+                    'voucher_no' => $detail->voucher_no
+                ];
+            }),
+        ];
+
+        // Return JSON response
+        return response()->json([
+            'status' => 'success',
+            'data' => $response,
+        ], 200);
+    }
+
 }

@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\EnvironmentController;
 use App\Http\Controllers\Api\DatabaseBackupController;
-use App\Http\Controllers\Api\RedeemController;
+use App\Http\Controllers\Api\RedeemApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,7 +48,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('database-backups-download/{fileName}', [DatabaseBackupController::class, 'databaseBackupDownload']);
 
         
-        Route::post('/vouchers/redeem', [RedeemController::class, 'redeemVoucher']);
+        Route::post('/vouchers/redeem', [RedeemApiController::class, 'redeemVoucher']);
+        Route::post('/vouchers/list', [RedeemApiController::class, 'getListVoucher']);
     });
 });
 
