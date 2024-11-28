@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Voucher Header
     Route::resource('vouchers', VoucherHeaderController::class);
     // Route::post('voucher-headers', [VoucherHeaderController::class, 'create'])->name('voucher-headers.create');
-    Route::post('/vouchers/create', [VoucherHeaderController::class, 'create'])->name('vouchers.create');
+    // Route::post('/vouchers/create', [VoucherHeaderController::class, 'create'])->name('vouchers.create');
     Route::post('/voucher-headers/validate', [VoucherHeaderController::class, 'validateVoucher'])->name('vouchers.validate');
     Route::post('/vouchers/confirm', [VoucherHeaderController::class, 'confirm'])->name('vouchers.confirm');
     Route::match(['get', 'post'], 'vouchers-filter', [VoucherHeaderController::class, 'index'])->name('vouchers-filter.index');
