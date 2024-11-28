@@ -33,7 +33,7 @@ Route::get('/', function () {
     return to_route('login');
 });
 
-Route::get('evoucher', [VoucherHeaderController::class, 'testVoucher'])->name('evoucher');
+
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // Voucher Header
     Route::resource('vouchers', VoucherHeaderController::class);
     // Route::post('voucher-headers', [VoucherHeaderController::class, 'create'])->name('voucher-headers.create');
-    // Route::post('/vouchers/create', [VoucherHeaderController::class, 'create'])->name('vouchers.create');
+    Route::post('/vouchers/create', [VoucherHeaderController::class, 'create'])->name('vouchers.create');
     Route::post('/voucher-headers/validate', [VoucherHeaderController::class, 'validateVoucher'])->name('vouchers.validate');
     Route::post('/vouchers/confirm', [VoucherHeaderController::class, 'confirm'])->name('vouchers.confirm');
     Route::match(['get', 'post'], 'vouchers-filter', [VoucherHeaderController::class, 'index'])->name('vouchers-filter.index');
@@ -94,7 +94,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // Redeem
     Route::resource('redeem', RedeemController::class);
-    // Route::post('/redeem/create', [RedeemController::class, 'create'])->name('redeem.create');
+    Route::post('/redeem/create', [RedeemController::class, 'create'])->name('redeem.create');
 
     Route::resource('reports', ReportController::class);
 
