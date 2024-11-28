@@ -94,7 +94,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // Redeem
     Route::resource('redeem', RedeemController::class);
-    Route::post('/redeem/create', [RedeemController::class, 'create'])->name('redeem.create');
+    // Route::post('/redeem/create', [RedeemController::class, 'create'])->name('redeem.create');
 
     Route::resource('reports', ReportController::class);
 
