@@ -25,6 +25,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\VoucherDetailController;
 use App\Http\Controllers\VoucherHeaderController;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\EmailController;
 
 require __DIR__ . '/auth.php';
 
@@ -32,8 +33,15 @@ Route::get('/', function () {
     return to_route('login');
 });
 
+Route::get('evoucher', [VoucherHeaderController::class, 'testVoucher'])->name('evoucher');
+
 Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/evoucher', [VoucherHeaderController::class, 'testVoucher'])->name('evoucher');
+
+    Route::get('/send-email', [EmailController::class, 'redirectToAuthUrl']);
+    Route::get('/redirect-to-auth-url', [EmailController::class, 'redirectToAuthUrl']);
+    Route::get('/callback', [EmailController::class, 'handleCallback']);
+    
+    // Route::get('/evoucher', VoucherHeaderController::class, 'eVoucher');
     // Dashboards
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard.index');
     // Locale
@@ -82,6 +90,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     // Patient
     Route::resource('patient', PatientController::class);
+    Route::post('search-patient', [PatientController::class, 'searchPatient'])->name('search.patient');
 
     // Redeem
     Route::resource('redeem', RedeemController::class);

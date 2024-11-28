@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="vvoucher_header_no" class="form-label">{{ __('Voucher No') }}</label>
+                        <label for="voucher_header_no" class="form-label">{{ __('Voucher No') }}</label>
                         <input type="text" id="voucher_header_no" name="voucher_header_no" class="form-control" value="{{ $voucherNo ?? '' }}" readonly>
                     </div>
 
@@ -115,13 +115,14 @@
                 paketVoucherSelect.addEventListener('change', function () {
                     const selectedOption = this.options[this.selectedIndex];
                     maxSharing = parseInt(selectedOption.getAttribute('data-max-sharing'), 10) || 0;
+                    console.log(maxSharing);
                     clearFamilyMembers();
                     updateAddFamilyBtn();
                 });
 
                 // Handle Add Family Button click
                 addFamilyBtn.addEventListener('click', function () {
-                    if (familyCount < maxSharing) {
+                    if (maxSharing > 1) {
                         const familyMember = { name: '', birthday: '', phone: '', email: '' };
                         addFamilyMemberRow(familyMember);
                         familyCount++;
@@ -211,6 +212,25 @@
                     });
                     return familyMembers;
                 }
+
+                // const purchaseDateInput = document.getElementById('purchase_date');
+                // const expiryDateInput = document.getElementById('expiry_date');
+
+                // // Set the minimum expiry date initially based on the purchase date
+                // expiryDateInput.min = purchaseDateInput.value;
+
+                // // When the purchase date changes, update the minimum expiry date
+                // purchaseDateInput.addEventListener('change', function () {
+                //     expiryDateInput.min = purchaseDateInput.value;
+                // });
+
+                // // Optional: Validate form before submission
+                // document.querySelector('form').addEventListener('submit', function (event) {
+                //     if (expiryDateInput.value < purchaseDateInput.value) {
+                //         event.preventDefault();
+                //         alert('The expiry date must be after or equal to the purchase date.');
+                //     }
+                // });
             });
         </script>
     @endpush

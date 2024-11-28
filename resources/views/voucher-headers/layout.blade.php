@@ -1,154 +1,747 @@
-<!DOCTYPE html>
-<html lang="en">
+<html translate="no">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket</title>
+    <meta name="google" content="notranslate" />
+    <meta charset="utf-8" />
+    <title>E-Voucher —</title>
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+        *,
+            *:before,
+            *:after {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            html {
+                font-family: Arial, sans-serif;
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            article,
+            aside,
+            details,
+            figcaption,
+            figure,
+            footer,
+            header,
+            hgroup,
+            main,
+            menu,
+            nav,
+            section,
+            summary {
+                display: block;
+            }
+
+            audio,
+            canvas,
+            progress,
+            video {
+                display: inline-block;
+                vertical-align: baseline;
+            }
+
+            audio:not([controls]) {
+                display: none;
+                height: 0;
+            }
+
+            [hidden],
+            template {
+                display: none;
+            }
+
+            a {
+                background-color: transparent;
+            }
+
+            a:active,
+            a:hover {
+                outline: 0;
+            }
+
+            abbr[title] {
+                border-bottom: 1px dotted;
+            }
+
+            b,
+            strong {
+                font-weight: bold;
+            }
+
+            dfn {
+                font-style: italic;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin: 0.67em 0;
+            }
+
+            mark {
+                background: #ff0;
+                color: #000;
+            }
+
+            small {
+                font-size: 80%;
+            }
+
+            sub,
+            sup {
+                font-size: 75%;
+                line-height: 0;
+                position: relative;
+                vertical-align: baseline;
+            }
+
+            sup {
+                top: -0.5em;
+            }
+
+            sub {
+                bottom: -0.25em;
+            }
+
+            img {
+                border: 0;
+            }
+
+            svg:not(:root) {
+                overflow: hidden;
+            }
+
+            figure {
+                margin: 1em 40px;
+            }
+
+            hr {
+                -moz-box-sizing: content-box;
+                box-sizing: content-box;
+                height: 0;
+            }
+
+            pre {
+                overflow: auto;
+            }
+
+            code,
+            kbd,
+            pre,
+            samp {
+                font-family: monospace, monospace;
+                font-size: 1em;
+            }
+
+            button,
+            input,
+            optgroup,
+            select,
+            textarea {
+                color: inherit;
+                font: inherit;
+                margin: 0;
+            }
+
+            button {
+                overflow: visible;
+            }
+
+            button,
+            select {
+                text-transform: none;
+            }
+
+            button,
+            html input[type="button"],
+            input[type="reset"],
+            input[type="submit"] {
+                -webkit-appearance: button;
+                cursor: pointer;
+            }
+
+            button[disabled],
+            html input[disabled] {
+                cursor: default;
+            }
+
+            button::-moz-focus-inner,
+            input::-moz-focus-inner {
+                border: 0;
+                padding: 0;
+            }
+
+            input {
+                line-height: normal;
+            }
+
+            input[type="checkbox"],
+            input[type="radio"] {
+                box-sizing: border-box;
+                padding: 0;
+            }
+
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                height: auto;
+            }
+
+            input[type="search"] {
+                -webkit-appearance: textfield;
+                -moz-box-sizing: content-box;
+                -webkit-box-sizing: content-box;
+                box-sizing: content-box;
+            }
+
+            input[type="search"]::-webkit-search-cancel-button,
+            input[type="search"]::-webkit-search-decoration {
+                -webkit-appearance: none;
+            }
+
+            fieldset {
+                border: 1px solid #c0c0c0;
+                margin: 0 2px;
+                padding: 0.35em 0.625em 0.75em;
+            }
+
+            legend {
+                border: 0;
+                padding: 0;
+            }
+
+            textarea {
+                overflow: auto;
+            }
+
+            optgroup {
+                font-weight: bold;
+            }
+
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            td,
+            th {
+                padding: 0;
+            }
+
+            body {
+                font-size: 8pt;
+                line-height: 1.5;
+                /* padding-top: 8px; */
+                background: #eee;
+            }
+
+            img {
+                max-width: 100%;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            body {
+                font-size: 16px;
+            }
+
+            .site-header {
+                height: 48px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                left: 0;
+                background: rgba(255, 255, 255, 0.88);
+                box-shadow:
+                    0 1px 1px rgba(0, 0, 0, 0.1),
+                    0 1px 1px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                padding: 0 16px;
+                z-index: 99;
+            }
+
+            .site-header__logo {
+                float: left;
+            }
+
+            .site-header__logo em {
+                display: block;
+                font-size: 20px;
+                font-weight: 400;
+                text-transform: uppercase;
+                font-style: normal;
+                line-height: 48px;
+                color: #d9531e;
+            }
+
+            .site-header__action {
+                float: right;
+                padding: 8px 0;
+            }
+
+            .site-header__action .btn {
+                display: block;
+                vertical-align: middle;
+                line-height: 22px;
+                padding: 4px 12px;
+                border: solid 1px rgba(0, 0, 0, 0.1);
+                background: #fff;
+                border-radius: 3px;
+                font: inherit;
+                font-size: 14px;
+                outline: 0 !important;
+                float: left;
+                margin: 0 0 0 8px;
+                background-color: #01a4ef;
+                color: #fff !important;
+                background-image: linear-gradient(#2fbdfe, #01a4ef);
+                text-shadow: -0.1px -0.1px rgba(0, 0, 0, 0.12);
+                box-shadow: 0 0.1px 0.1px rgba(255, 255, 255, 0.4) inset;
+            }
+
+            .site-header__action .btn svg {
+                display: block;
+                width: 22px;
+                height: 22px;
+                fill: #fff;
+                float: left;
+                margin: 0 6px 0 -4px;
+            }
+
+            .site-header__action .btn:focus {
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            }
+
+            .evoucher-wrapper {
+                max-width: 746px;
+                margin: 24px auto;
+                background: #fff;
+                padding: 8px;
+                border: solid 1px #e5e5e5;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+            }
+
+            .evoucher {
+                border: solid 4px #eee;
+            }
+
+            .evoucher>table {
+                border-collapse: separate;
+            }
+
+            .evoucher>table td {
+                padding: 12px;
+                border: solid 4px #eee;
+            }
+
+            .evoucher>table td img {
+                max-width: 1000px;
+            }
+
+            td svg {
+                vertical-align: middle;
+            }
+
+            table.toc td {
+                border: 0;
+                vertical-align: top;
+            }
+
+            .evoucher td ul,
+            .evoucher td ol {
+                margin: 0 0 0 16px;
+                padding: 0;
+                font-size: 13px;
+            }
+
+            .file-btn {
+                position: absolute;
+                top: 0px;
+                right: 10px;
+                overflow: hidden;
+                height: 24px;
+                line-height: 24px;
+                padding: 0 6px;
+                border-radius: 3px;
+                border: solid 1px #ccc;
+                font-size: 9px;
+                cursor: pointer;
+                font-family: Arial, sans-serif;
+                text-transform: uppercase;
+                font-weight: 700;
+                background: rgba(255, 255, 255, 0.4);
+            }
+
+            .file-btn input {
+                position: absolute;
+                opacity: 0;
+                line-height: 4rem;
+                width: 8rem;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                cursor: pointer;
+            }
+
+            .editable {
+                border: dashed 1px #e5e5e5;
+                outline: 0;
+            }
+
+            .editable:focus {
+                background: #ffffce;
+            }
+
+            .break {
+                margin: 24px 0;
+            }
+
+            @media print {
+                body {
+                    padding-top: 0;
+                    background: transparent;
+                }
+
+                .eticket {
+                    padding: 0;
+                    border: 0;
+                    box-shadow: none;
+                }
+
+                .site-header {
+                    display: none;
+                }
+
+                .break {
+                    page-break-after: always;
+                    height: 0;
+                    background: transparent;
+                    margin: 0;
+                }
+
+                .editable {
+                    border: 0;
+                    background: transparent;
+                }
+
+                .inline-editor {
+                    display: none;
+                }
+            }
+        @media screen and (max-width: 746px) {
+            .evoucher-wrapper:not(.fix-width) .evoucher table:first-child tr:first-child td:first-child {
+                padding: 0px !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table:first-child tr:first-child td:first-child div {
+                padding: 0px 5px !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table:nth-child(1) p {
+                font-size: 0.8rem;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table td {
+                display: block;
+                width: 100% !important;
+                padding: 10px !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table tr:first-child td div {
+                height: auto !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table:nth-child(2) tr:first-child td:first-child {
+                padding: 0px !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table tr:first-child td:first-child img {
+                height: auto !important;
+                width: auto !important;
+                max-width: 100% !important;
+                padding: 0px !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table td img {
+                max-width: 100%;
+                height: auto !important;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table:nth-child(2) tbody tr:first-child td:first-child img {
+                width: 100%;
+            }
+
+            .evoucher-wrapper:not(.fix-width) .evoucher table td img.image_logo {
+                max-width: 150px !important;
+            }
         }
 
-        .ticket-container {
-            background-color: white;
-            max-width: 800px;
-            margin: 0 auto;
-            border: 1px solid #ddd;
-            padding: 20px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        .evoucher-wrapper.fix-width {
+            min-width: 746px;
         }
 
-        .ticket-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-
-        .ticket-header img {
+        .evoucher-wrapper.fix-width .evoucher {
             width: 100%;
         }
 
-        .ticket-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border: 1px solid black;
-        }
-
-        .ticket-type {
-            font-size: 16px;
-            font-weight: bold;
-            color: red;
-        }
-
-        /* .event-info,
-        .barcode-section {
-            width: 45%;
-        } */
-
-        .event-info h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .barcode-section {
+        .loading {
             text-align: center;
         }
 
-        .barcode-section img {
-            width: 150px;
+        .loading span {
+            display: inline-block;
+            animation: pulse 1s infinite;
+            opacity: 0;
+            /* Initially hidden */
         }
 
-        .terms-title {
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-            color: red;
+        @keyframes pulse {
+            0% {
+                opacity: 0;
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            75% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
-        .terms-list {
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .terms-list li {
-            margin-bottom: 10px;
-        }
-
-        .contact-info {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .contact-info a {
-            color: red;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .footer div {
-            width: 30%;
-        }
-
-        .footer .social-icons img {
-            width: 20px;
-            margin-right: 10px;
-        }
+        
     </style>
 </head>
 
 <body>
-    <div class="ticket-container">
-        <!-- Header with logo and info -->
-        <div class="ticket-header">
-            <img src="data:image/png;base64,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" alt="Loket Logo">
-        </div>
+    <div id="content" style="display: block">
+        <div class="evoucher-wrapper">
+            <div class="evoucher">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="
+                    width: 75%;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    padding: 6px 12px;
+                    font-size: 14px;
+                    text-align: center;
+                  ">
+                                <div tabindex="0" spellcheck="false" role="textbox"
+                                    aria-label="Rich Text Editor, editor1" title="Rich Text Editor, editor1"
+                                    aria-describedby="cke_63" style="position: relative">
+                                    <p>
+                                        <font size="4">E - Voucher Akupunktur</font>
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" style="width: 63%; padding: 10px 0px; vertical-align: middle">
+                                <div style="position: relative">
+                                    <img src="{{ $image }}" alt="Voucher Image" style="
+                                        display: block;
+                                        max-width: 400px;
+                                        height: 240px;
+                                        margin: auto;
+                                        padding: 0px 10px;
+                                    " />
+                                </div>
+                            </td>
+                            <td style="text-align: center; vertical-align: middle; padding: 0px;">
+                                <div style="position: relative">
+                                    <img src=" {{ $image }} " class="image_logo" alt="Logo Image" 
+                                    style="display: block; max-width: 100px; height: 100px; margin: auto" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center; padding: 10px 10px">
+                                <span style="height: 80px">
+                                    <img src="data:image/png;base64,{{ $qrCode }}"  style="height: 80px; padding-top: 8px" />
+                                </span>
+                                <span style="display: block; margin: 0; line-height: 1.2; font-size: 12px;"><br /><b>TICKET {{$number}} of {{$total_distribute}}</b></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    font-size: 13px;
+                    whitespace: nowrap;
+                    padding: 6px 12px;
+                  ">
+                                <div class="editable__">
+                                    Periode : {{$months}} Bulan
+                                    <br />
+                                    {{$purchase_date}} - {{$expiry_date}}<br />
+                                    Jakarta<br />
+                                </div>
+                            </td>
+                            <td style="
+                    text-align: center;
+                    line-height: 1.2;
+                    padding: 8px 12px;
+                    font-size: 13px;
+                  ">
+                                <div class="editable__">
+                                    <b>
+                                        {{$voucher_id}}
+                                        <br />{{$patient_name}}
+                                    </b>
+                                    <br />Ordered on {{$purchase_date}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <h2 style="margin: 0 0; font-size: 18px; color: #ff3a2d; text-transform: uppercase; text-align: center;" class="editable__">
+                                    Terms &amp; Condition
+                                </h2>
+                                <table class="toc">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 100%">
+                                                <div class="editable__">
+                                                    {!! $tnc !!}
+                                                </div>
+                                            </td>
+                                            {{-- <td style="width: 50%"></td> --}}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <tbody>
+                        <tr>
+                        <tr>
+                            <td colspan="3" style="
+                    text-align: center;
+                    white-space: nowrap;
+                    font-size: 12px;
+                    font-weight: 700;
+                    width: 33.33333%;
+                  ">
+                                Informasi Lebih Lanjut
+                            </td>
+                        </tr>
 
-        <!-- Event info and barcode -->
-        <div class="ticket-details">
-            {{-- <div class="event-info">
-                <h1>Akupunktur 12</h1>
-                <p>Ciputra Medical Center</p>
-            </div> --}}
-            <div class="barcode-section">
-                <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code">
-                <p>Voucher No {{ $voucher_no }}</p>
-                <p>TICKET 1 of 2</p>
+                        <td style="
+                    text-align: center;
+                    white-space: nowrap;
+                    color: #ff3a2d;
+                    font-size: 14px;
+                    font-weight: 700;
+                    width: 33.33333%;
+                    text-transform: uppercase;
+                  ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32">
+                                <path
+                                    d="M22 20c-2 2-2 4-4 4s-4-2-6-4-4-4-4-6 2-2 4-4-4-8-6-8-6 6-6 6c0 4 4.11 12.11 8 16s12 8 16 8c0 0 6-4 6-6s-6-8-8-6z">
+                                </path>
+                            </svg>&nbsp;
+                            <span class="editable__"> (021)29888137 </span>
+                        </td>
+                        <td style="
+                    text-align: center;
+                    white-space: nowrap;
+                    color: #ff3a2d;
+                    font-size: 14px;
+                    font-weight: 700;
+                    width: 33.33333%;
+                    text-transform: uppercase;
+                  ">
+                            <svg width="16" height="16" viewBox="0 0 0.48 0.48" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M.348.287.308.268Q.299.263.294.271L.276.294Q.271.3.263.296C.257.293.237.286.214.267A.2.2 0 0 1 .181.226Q.178.217.184.213l.009-.01.006-.01q.003-.006 0-.011L.18.139C.175.127.171.129.167.129H.155a.02.02 0 0 0-.016.007C.134.142.118.157.118.185s.021.058.025.061.042.064.102.089l.034.013a.1.1 0 0 0 .037.003C.327.35.35.337.355.323S.36.297.359.294.353.29.347.287M.239.435a.2.2 0 0 1-.1-.027L.132.404.057.423.076.35.072.343a.2.2 0 0 1-.03-.105.198.198 0 0 1 .338-.14.2.2 0 0 1 .058.14.2.2 0 0 1-.198.198M.408.07A.24.24 0 0 0 .24 0a.238.238 0 0 0-.206.357L0 .48.126.447A.25.25 0 0 0 .24.476.24.24 0 0 0 .478.238a.24.24 0 0 0-.07-.169"
+                                    fill="#000" />
+                            </svg>&nbsp;
+                            <span class="editable__"> +62 780 33212250 </span>
+                        </td>
+                        <td style="
+                    text-align: center;
+                    white-space: nowrap;
+                    color: #ff3a2d;
+                    font-size: 14px;
+                    font-weight: 700;
+                    width: 33.33333%;
+                    text-transform: uppercase;
+                  ">
+                            <svg fill="#000000" height="16px" width="16px" version="1.1" id="Layer_1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                viewBox="-2.86 2.9 10.24 10.24" xml:space="preserve">
+                                <g>
+                                    <path
+                                        d="M3.66 8.02c0 0.772 -0.628 1.4 -1.4 1.4s-1.4 -0.628 -1.4 -1.4c0 -0.186 0.038 -0.364 0.104 -0.526H0.2v2.096C0.2 9.86 0.42 10.08 0.69 10.08h3.14c0.27 0 0.49 -0.22 0.49 -0.49V7.494h-0.764c0.068 0.162 0.104 0.34 0.104 0.526" />
+                                    <path points="211.4,345.9 211.4,308.1 211.4,302.5 205.8,302.5 168,302.6 168.2,346 	"
+                                        d="M4.228 6.918L4.228 6.162L4.228 6.05L4.116 6.05L3.36 6.052L3.364 6.92Z" />
+                                    <path
+                                        d="M2.26 8.92c0.496 0 0.902 -0.404 0.902 -0.902 0 -0.196 -0.064 -0.378 -0.17 -0.526 -0.164 -0.226 -0.43 -0.376 -0.73 -0.376s-0.566 0.148 -0.73 0.376c-0.106 0.148 -0.17 0.33 -0.17 0.526C1.36 8.516 1.764 8.92 2.26 8.92" />
+                                    <path
+                                        d="M-2.86 2.9v10.24h10.24V2.9zm7.68 4.594v2.096c0 0.546 -0.444 0.99 -0.99 0.99h-3.14C0.144 10.58 -0.3 10.136 -0.3 9.59V6.448c0 -0.546 0.444 -0.99 0.99 -0.99h3.14c0.546 0 0.99 0.444 0.99 0.99z" />
+                                </g>
+                            </svg>&nbsp;
+                            <span class="editable__"> @ciputramedicalcenter </span>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="
+                    text-align: center;
+                    white-space: nowrap;
+                    font-size: 12px;
+                    font-weight: 700;
+                    width: 33.33333%;
+                  ">
+                                www.<span style="color: #ff3a2d">ciputramedicalcenter</span>.com
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+        <div class="break"></div>
+        <script>
+            const loadingIndicator = document.getElementById("loadingIndicator")
+            const content = document.getElementById("content")
 
-        <!-- Terms and Conditions -->
-        <h3 class="terms-title">TERMS & CONDITION</h3>
-        <ul class="terms-list">
-            <li>Acara ini hanya untuk 17 tahun ke atas, dan mengandung kata-kata dan tema yang kasar/sensitif.</li>
-            <li>Wajib menunjukkan kartu identitas yang sah (KTP/Paspor/SIM) pada saat penukaran E-Voucher dengan tiket.</li>
-            <li>Registrasi ulang dimulai 2 jam sebelum acara. Pintu masuk ditutup ketika acara berlangsung.</li>
-            <li>Pengunjung wajib mematikan handphone dan perangkat elektronik lain selama acara.</li>
-            <li>Dilarang membawa makanan/minuman, anak-anak, bayi, atau hewan peliharaan.</li>
-            <li>Tiket yang sudah dibeli tidak dapat dikembalikan/dipertukarkan.</li>
-            <li>Penyelenggara berhak menolak penonton yang tidak memenuhi syarat dan ketentuan di atas.</li>
-            <li>Jika ada pertanyaan lebih lanjut bisa email ke <a href="mailto:support@loket.com">support@loket.com</a>.</li>
-        </ul>
+            loadingIndicator.style.display = "block"
+            content.style.display = "none"
 
-        <!-- Footer -->
-        <div class="footer">
-            <div>WWW.CIPUTRA.COM</div>
-            <div>
-                <img src="https://image.flaticon.com/icons/png/512/724/724664.png" alt="Phone" width="20px"> +62-21-8060-0822
-            </div>
-        </div>
+            window.addEventListener("load", function () {
+                loadingIndicator.style.display = "none"
+                content.style.display = "block"
+            })
+        </script>
     </div>
+
 </body>
 
 </html>

@@ -10,7 +10,7 @@ class PackageVoucher extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'name', 'description', 'voucher_type', 'total_distribute',  'max_sharing', 'amount', 'image', 'tnc'];
+    protected $fillable = ['id', 'name', 'description', 'voucher_type', 'total_distribute', 'max_uses',  'max_sharing', 'amount', 'image', 'tnc', 'logo_unit'];
 
     public function vouchers()
     {

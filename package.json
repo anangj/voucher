@@ -38,6 +38,7 @@
         "leaflet": "^1.9.3",
         "owl.carousel": "^2.3.4",
         "plyr": "^3.7.8",
+        "quill": "^2.0.2",
         "resize-observer-polyfill": "^1.5.1",
         "simplebar": "^6.2.3",
         "sweetalert2": "^11.6.10",

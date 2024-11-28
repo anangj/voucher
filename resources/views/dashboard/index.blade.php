@@ -49,11 +49,11 @@
                     <input type="text" id="voucher_no" name="voucher_no" class="form-control w-full p-2 border border-gray-300 rounded-md" required >
                 </div>
 
-                <input type="hidden" id="patient_id" name="patient_id">
+                {{-- <input type="hidden" id="patient_id" name="patient_id">
                 <input type="hidden" id="voucher_header_id" name="voucher_header_id">
                 <input type="hidden" id="paket_voucher_name" name="paket_voucher_name">
                 <input type="hidden" id="purchase_date" name="purchase_date">
-                <input type="hidden" id="expiry_date" name="expiry_date">
+                <input type="hidden" id="expiry_date" name="expiry_date"> --}}
 
                 <!-- Hidden QR Code scanner (until button click) -->
                 <div id="qr-reader" class="w-full h-74 bg-gray-100 mb-4 hidden"></div>
@@ -118,12 +118,7 @@
                             const data = JSON.parse(decodedText);
 
                             // Place parsed data into individual form fields
-                            document.getElementById('voucher_no').value = data.voucher_no || '';
-                            document.getElementById('patient_id').value = data.patient_id || '';
-                            document.getElementById('voucher_header_id').value = data.voucher_header_id || '';
-                            document.getElementById('paket_voucher_name').value = data.paket_voucher_name || '';
-                            document.getElementById('expiry_date').value = data.expiry_date || '';
-                            document.getElementById('purchase_date').value = data.purchase_date || '';
+                            document.getElementById('voucher_no').value = data.voucher
 
                             console.log(`Decoded data:`, data);
                             // Auto-stop the camera after successful scan

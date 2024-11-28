@@ -12,10 +12,17 @@
 
         <div class="card">
             <div class="flex justify-between">
-                <div class="card-header noborder">
-                    <button type="button" id="createVoucherBtn" class="btn inline-flex justify-center btn-outline-dark capitalize" disabled>
-                        {{ __('Create Voucher') }}
-                    </button>
+                <div class="flex">
+                    <div class="card-header noborder">
+                        <button type="button" id="createVoucherBtn" class="btn inline-flex justify-center btn-outline-dark capitalize" disabled>
+                            {{ __('Create Voucher') }}
+                        </button>
+                    </div>
+                    <div class="card-header noborder">
+                        <button type="button" id="savePatient" class="btn inline-flex justify-center btn-outline-dark capitalize" style="display: none">
+                            {{ __('Save') }}
+                        </button>
+                    </div>
                 </div>
                 {{-- Trigger Modal Button --}}
                 <div class="card-header noborder">
@@ -49,7 +56,7 @@
                                             <th scope="col" class="table-th">{{ __('Action') }}</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white divide-y divide-slate-100 dark:divide-slate-700 dark:bg-slate-800">
+                                    <tbody id="existingPatient" class="bg-white divide-y divide-slate-100 dark:divide-slate-700 dark:bg-slate-800">
                                         @forelse ($data as $item)
                                             <tr>
                                                 <td class="table-td">
@@ -113,7 +120,7 @@
 
                 <form id="searchPatientForm" class="space-y-3">
                     {{-- RM No --}}
-                    <input type="text" id="rm_no" name="rm_no" placeholder="Enter RM No" class="form-control" autocomplete="off">
+                    {{-- <input type="text" id="rm_no" name="rm_no" placeholder="Enter RM No" class="form-control" autocomplete="off"> --}}
 
                     {{-- Name --}}
                     <input type="text" id="name" name="name" placeholder="Enter Name" class="form-control" autocomplete="off">
@@ -122,7 +129,7 @@
                     <input type="date" id="bod" name="bod" placeholder="Enter Birthdate" class="form-control">
 
                     {{-- Address (Alamat) --}}
-                    <input type="text" id="alamat" name="alamat" placeholder="Enter Address" class="form-control" autocomplete="off">
+                    {{-- <input type="text" id="alamat" name="alamat" placeholder="Enter Address" class="form-control" autocomplete="off"> --}}
 
                     <div class="flex justify-between mt-4">
                         <button type="button" id="searchPatientBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
@@ -139,6 +146,7 @@
 
     @push('scripts')
         <script>
+            const selectedPatients = [];
 
             // Handle Create Voucher Button click
             document.getElementById('createVoucherBtn').addEventListener('click', function() {
@@ -152,67 +160,167 @@
                     return;
                 }
 
+                const selectedPatientsString = selectedPatients.join(',');
+
                 // Set the value of the hidden input field
-                document.getElementById('selected_patients').value = JSON.stringify(selectedPatients);
+                // document.getElementById('selected_patients').value = JSON.stringify(selectedPatients);
+                document.getElementById('selected_patients').value = selectedPatientsString;
 
                 // Submit the form
                 document.getElementById('bulkActionForm').submit();
             });
 
-            // // Open Modal
-            // document.getElementById('openSearchPatientModal').addEventListener('click', function() {
-            //     document.getElementById('searchPatientModal').classList.remove('hidden');
-            // });
+             // Open Modal
+             document.getElementById('openSearchPatientModal').addEventListener('click', function() {
+                 document.getElementById('searchPatientModal').classList.remove('hidden');
+             });
 
-            // // Close Modal
-            // document.getElementById('closeSearchPatientModal').addEventListener('click', function() {
-            //     document.getElementById('searchPatientModal').classList.add('hidden');
-            // });
+            // Close Modal
+            document.getElementById('closeSearchPatientModal').addEventListener('click', function() {
+                document.getElementById('searchPatientModal').classList.add('hidden');
+            });
 
-            // document.getElementById('searchPatientBtn').addEventListener('click', function() {
-            //     const rmNo = document.getElementById('rm_no').value;
-            //     const name = document.getElementById('name').value;   // Get Name value
-            //     const bod = document.getElementById('bod').value;     // Get Birthdate value
-            //     const alamat = document.getElementById('alamat').value;  // Get Address value
+            // Search Operation
+            document.getElementById('searchPatientBtn').addEventListener('click', function () {
+                // Gather input values
+                // const rmNo = document.getElementById('rm_no').value;
+                const name = document.getElementById('name').value;
+                const bod = document.getElementById('bod').value;
 
-            //     // Disable button during the request
-            //     const searchPatientBtn = document.getElementById('searchPatientBtn');
-            //     searchPatientBtn.disabled = true;
+                // Disable button during the request
+                const searchPatientBtn = document.getElementById('searchPatientBtn');
+                searchPatientBtn.disabled = true;
 
+                // Make AJAX call to the Laravel controller's searchPatient method
+                fetch("{{ route('search.patient') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({name: name, bod: bod })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Re-enable the button after fetching the data
+                    searchPatientBtn.disabled = false;
+                    const totalPatient = data.patients.count;
+                    
+                    if (data.status === 'success' && data.patients.data !== null) {
+                        // Hide the existing table (replace with the ID or class of your current table)
+                        document.querySelector('.data-table').style.display = 'none';
+                        document.getElementById('createVoucherBtn').style.display = 'none';
+                        document.getElementById('savePatient').style.display = 'inline-flex';
 
-            //     // Example API parameters and body data
-            //     const apiUrl = 'https://api.example.com/search-patient'; // Replace with the actual API endpoint
-            //     const apiToken = 'your-api-token';  // Replace with your API token
-            //     const searchParams = {
-            //         rm_no: rmNo || null,  // Pass rm_no if available
-            //         name: name || null,   // Pass name if available
-            //         bod: bod || null,     // Pass birthdate if available
-            //         alamat: alamat || null // Pass address if available
-            //     };
+                        // Create a new table element
+                        const newTable = document.createElement('table');
+                        newTable.className = 'new-data-table w-full divide-y table-fixed divide-slate-100 dark:divide-slate-700';
+                        
+                        // Create table header
+                        newTable.innerHTML = `
+                            <thead class="bg-slate-200 dark:bg-slate-700">
+                                <tr>
+                                    <th scope="col" class="table-th">Select</th>
+                                    <th scope="col" class="table-th">RM</th>
+                                    <th scope="col" class="table-th">Patient Name</th>
+                                    <th scope="col" class="table-th">Birthdate</th>
+                                    <th scope="col" class="table-th">Phone</th>
+                                    <th scope="col" class="table-th">Email</th>
+                                    <th scope="col" class="table-th">Gender</th>
+                                    <th scope="col" class="table-th">Last Visit Date</th>
+                                    <th scope="col" class="table-th">Action</th>
+                                </tr>
+                            </thead>
+                        `;
 
-            //     // Send API request with simple auth (Bearer token)
-            //     fetch(apiUrl, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Authorization': `Bearer ${apiToken}`,  // Use Bearer token for simple auth
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify(searchParams) // Body payload with rm_no
-            //     })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         // Re-enable the button after fetching the data
-            //         searchPatientBtn.disabled = false;
+                        // Create table body
+                        const tableBody = document.createElement('tbody');
+                        tableBody.className = 'bg-white divide-y divide-slate-100 dark:divide-slate-700 dark:bg-slate-800';
 
-            //         // If data is received, update the table body with the new patients
-            //         console.log(data);
-            //     })
-            //     .catch(error => {
-            //         console.error('Error fetching patient data:', error);
-            //         alert('Error fetching patient data.');
-            //         searchPatientBtn.disabled = false;
-            //     });
-            // });
+                        // Check if data.patients.data is an array or an object
+                        const patients = Array.isArray(data.patients.data) ? data.patients.data : [data.patients.data];
+                        patients.forEach((patient, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td class='table-td'><input type="checkbox" class="select-item" value="${index}"></td>
+                                <td class='table-td'>${patient.no_rm}</td>
+                                <td class='table-td'>${patient.title} ${patient.name_real}</td>
+                                <td class='table-td'>${patient.tgl_lahir}</td>
+                                <td class='table-td'>${patient.hp_pasien}</td>
+                                <td class='table-td'>${patient.email}</td>
+                                <td class='table-td'>${patient.sex}</td>
+                                <td class='table-td'>${patient.tgl_kunjungan_terakhir || '-'}</td>
+                                <td class='table-td'>
+                                    <div class="flex space-x-1">
+                                        <button class="btn btn-sm btn-warning select-patient" data-index="${index}">
+                                            Select
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                        
+                        
+
+                        // Append body to the new table
+                        newTable.appendChild(tableBody);
+
+                        // Append new table to the DOM
+                        document.querySelector('.card-body').appendChild(newTable);
+                        document.getElementById('searchPatientModal').classList.add('hidden');
+                        document.getElementById('name').value = '';
+                        document.getElementById('bod').value = '';
+                        
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching patient data:', error);
+                    alert('Error fetching patient data.');
+                    searchPatientBtn.disabled = false;
+                });
+            });
+
+            // Select the Searching patient
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('select-patient')) {
+                    event.preventDefault();
+
+                    // Retrieve the patient data from the table row
+                    const row = event.target.closest('tr');
+                    const patientData = {
+                        no_rm: row.querySelector('td:nth-child(2)').innerText,
+                        name_real: row.querySelector('td:nth-child(3)').innerText,
+                        tgl_lahir: row.querySelector('td:nth-child(4)').innerText,
+                        phone: row.querySelector('td:nth-child(5)').innerText,
+                        email: row.querySelector('td:nth-child(6)').innerText,
+                        sex: row.querySelector('td:nth-child(7)').innerText,
+                        tgl_kunjungan_terakhir: row.querySelector('td:nth-child(8)').innerText,
+                    };
+
+                    // Check if the patient is already selected
+                    const patientIndex = selectedPatients.findIndex(
+                        (p) => p.name_real === patientData.name_real && p.tgl_lahir === patientData.tgl_lahir
+                    );
+
+                    if (patientIndex === -1) {
+                        // Patient is not selected, so add to selectedPatients
+                        selectedPatients.push(patientData);
+                        row.style.backgroundColor = '#e0f7fa'; // Highlight row
+                        event.target.textContent = 'Unselect'; // Change button label
+                    } else {
+                        // Patient is already selected, so remove from selectedPatients
+                        selectedPatients.splice(patientIndex, 1);
+                        row.style.backgroundColor = ''; // Remove highlight
+                        event.target.textContent = 'Select'; // Change button label
+                    }
+
+                    console.log('Current selected patients:', selectedPatients);
+                    document.getElementById('savePatient').addEventListener('click', submitSelectedPatients);
+                }
+            });
 
             // Handle individual checkbox selection for single selection
             document.querySelectorAll('.select-item').forEach(checkbox => {
@@ -231,6 +339,68 @@
                 const selectedItems = document.querySelectorAll('.select-item:checked').length;
                 document.getElementById('createVoucherBtn').disabled = selectedItems === 0;
             }
+
+            function submitSelectedPatients() {
+                console.log('sasa', selectedPatients);
+                
+                if (selectedPatients.length === 0) {
+                    alert("No patients selected.");
+                    return;
+                }
+
+                // Send selected patients to the server
+                fetch("{{ route('patient.store') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ patients: selectedPatients })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Selected Patient IDs:', data.selected_patients); 
+                        alert('Patients saved successfully.');
+                        window.location.href = "{{ route('patient.index') }}";
+
+                        // Call createVoucher with the selected patient IDs
+                        // createVoucher(data.selected_patients);
+                    } else {
+                        alert('An error occurred while saving patients.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while saving patients.');
+                });
+            }
+
+            function createVoucher(selectedPatients) {
+                fetch("{{ route('vouchers.create') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ selected_patients: selectedPatients })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('Voucher created successfully!');
+                        // Optionally, handle success (e.g., update the UI or navigate to another page)
+                        window.location.href = "{{ route('vouchers.create') }}";
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while creating the voucher.');
+                });
+            }
+
 
 
         </script>

@@ -18,7 +18,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\SendVoucherEmailJob;
+use App\Jobs\SendGmailApiEmail;
 use Illuminate\Support\Carbon;
+use Google\Client;
+use Google\Service\Gmail;
+use Google\Service\Gmail\Message;
+use App\Http\Controllers\EmailController;
 
 class VoucherHeaderController extends Controller
 {
@@ -78,22 +83,46 @@ class VoucherHeaderController extends Controller
      */
     public function create(Request $request)
     {
+        // dd($request->input('selected_patients'));
+        // $patients = collect();
+        // checking from get data from API
+        // if ($request->patients !== null) {
+        //     // dd($request->patients);
+        //     $patientsData = $request->patients;
+
+        //     foreach ($patientsData as $patientData) {
+        //         // dd($patientData);
+        //         $data = Patient::create([
+        //             'name' => $patientData['name_real'],
+        //             'birthday' => \Carbon\Carbon::parse($patientData['tgl_lahir'])->format('Y-m-d'),
+        //         ]);
+        //         $patients->push($data);
+        //     }
+        //     return response()->json(['status' => 'success', 'patients' => $patients]);
+        // }
+
         $selectedPatientId = session('patient_id');
+        // dd($request->input('selected_patients'));
 
         // If selected_patients are passed as JSON, decode it (from previous form submission)
-        $selectedPatients = $request->has('selected_patients') ? json_decode($request->input('selected_patients'), true) : [];
+        $selectedPatients = $request->has('selected_patients') ? $request->input('selected_patients') : [];
+        // dd($selectedPatients);
 
-        $patients = collect();
+        
 
         // If have selected patients, fetch them from the database
         if (!empty($selectedPatients)) {
-            $patients = Patient::whereIn('id', $selectedPatients)->get();
+            // dd('as');
+            $patients = Patient::where('id', $selectedPatients)->get();
+            // dd('aa');
         }
 
         // If returning from update form with a specific patient ID, fetch that patient
-        if ($selectedPatientId) {
-            $patients = Patient::where('id', $selectedPatientId)->get();
-        }
+        // if ($selectedPatientId) {
+        //     dd('sd');
+        //     $patients = Patient::where('id', $selectedPatientId)->get();
+        //     dd('vv');
+        // }
         // dd($patients);
         $breadcrumbItems = [
             [
@@ -135,6 +164,7 @@ class VoucherHeaderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         // Validate the request inputs
         $request->validate([
             'paket_voucher_id' => 'required|exists:package_vouchers,id',
@@ -201,6 +231,8 @@ class VoucherHeaderController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        // dd($getVoucherHeader);
+
         if ($getVoucherHeader !== null) {
             $voucherDetails = VoucherDetail::where('voucher_header_id', $getVoucherHeader->id)
             ->orderBy('voucher_no', 'desc')
@@ -211,11 +243,20 @@ class VoucherHeaderController extends Controller
             $runningNumber = 0;
         }
 
+        $qrVoucherHeader = [
+            'voucher' => $request->input('voucher_header_no')
+        ];
+
+        $qrHeaderJson = json_encode($qrVoucherHeader);
+        $qrCodeHeader = QrCode::format('svg')->size(200)->generate($qrHeaderJson);
+        $qrCodeBase64Header = base64_encode($qrCodeHeader);
+
         // Create a new voucher header for the selected patient
         $voucherHeader = VoucherHeader::create([
             'paket_voucher_id' => $paketVoucher->id,
             'patient_id' => $selectedPatients,
             'voucher_header_no' => $request->input('voucher_header_no'),
+            'qr_code_header' => $qrCodeBase64Header,
             'purchase_date' => $request->input('purchase_date'),
             'expiry_date' => $request->input('expiry_date'),
             'current_uses' => 0,
@@ -231,40 +272,90 @@ class VoucherHeaderController extends Controller
             // Generate a unique voucher number (e.g., V-20230910-001)
             $today = now()->format('Ymd');  // Format: YYYYMMDD
             $voucherNo = $request->input('voucher_header_no') . str_pad($runningNumber, 3, '0', STR_PAD_LEFT);
+            // dd($voucherNo);
 
             // Gather the important data for the QR code (Paket Voucher + Voucher details)
-            $qrData = [
+            // $qrData = [
+            //     'voucher_header_id' => $voucherHeader->id,
+            //     // 'voucher_no' => $voucherNo,
+            //     // 'patient_id' => $selectedPatients,
+            //     // 'paket_voucher_name' => $paketVoucher->name,
+            //     // 'expiry_date' => $request->input('expiry_date'),
+            //     // 'purchase_date' => $request->input('purchase_date'),
+            //     // 'max_sharing' => $paketVoucher->max_sharing,
+            //     // 'total_distribute' => $paketVoucher->total_distribute,
+            // ];
+
+            // // Encode the data into JSON format for the QR code
+            // $qrDataJson = json_encode($qrData);
+
+            // // Generate the QR code with the encoded data
+            // $qrCode = QrCode::format('svg')->size(200)->generate($qrDataJson);
+            // $qrCodeBase64 = base64_encode($qrCode);
+
+            // Create a new voucher detail for each distributed voucher
+            $voucher =  VoucherDetail::create([
                 'voucher_header_id' => $voucherHeader->id,
                 'voucher_no' => $voucherNo,
-                'patient_id' => $selectedPatients,
-                'paket_voucher_name' => $paketVoucher->name,
-                'expiry_date' => $request->input('expiry_date'),
-                'purchase_date' => $request->input('purchase_date'),
-                'max_sharing' => $paketVoucher->max_sharing,
-                'total_distribute' => $paketVoucher->total_distribute,
-            ];
+                // 'qr_code' => $qrCodeBase64,
+                'issued_to_family_member' => false,
+            ]);
 
             
 
-            // Encode the data into JSON format for the QR code
-            $qrDataJson = json_encode($qrData);
+            
 
-            // Generate the QR code with the encoded data
-            $qrCode = QrCode::format('svg')->size(200)->generate($qrDataJson);
-            $qrCodeBase64 = base64_encode($qrCode);
+        }
+
+            // Parse the purchase_date and expiry_date from the request
+            $purchaseDate = Carbon::parse($request->input('purchase_date'));
+            $expiryDate = Carbon::parse($request->input('expiry_date'));
+            $months = $purchaseDate->diffInMonths($expiryDate);
+
+            $expired = Carbon::parse($request->input('expiry_date'))->translatedFormat('d F Y');
+            $purchased = Carbon::parse($request->input('purchase_date'))->translatedFormat('d F Y');
+
+            $idVoucher = substr($voucherHeader->id, 0, 8);
 
             // Generate PDF from the HTML layout
             $data = [
-                'voucher_header_id' => $voucherHeader->id,
+                'number' => 1,
+                'voucher_id' => $idVoucher,
                 'voucher_no' => $voucherNo,
                 'patient_id' => $selectedPatients,
+                'patient_name' => $patientName,
                 'paket_voucher_name' => $paketVoucher->name,
-                'expiry_date' => $request->input('expiry_date'),
-                'purchase_date' => $request->input('purchase_date'),
+                'expiry_date' => $expired,
+                'purchase_date' => $purchased,
+                'months' => $months,
                 'max_sharing' => $paketVoucher->max_sharing,
                 'total_distribute' => $paketVoucher->total_distribute,
-                'qrCode' => $qrCodeBase64,
+                'qrCode' => $qrCodeBase64Header,
+                'tnc' => $paketVoucher->tnc,
             ];
+
+            // Full path to the image
+            $imagePath = storage_path('app/public/' . $paketVoucher->image);
+
+            if (file_exists($imagePath)) {
+                // Convert image to Base64 format
+                $imageBase64 = 'data:image/' . pathinfo($imagePath, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($imagePath));
+                $data['image'] = $imageBase64;
+            } else {
+                // If the image does not exist, set it to null or provide a default placeholder
+                $data['image'] = null;
+            }
+
+            $logoPath = storage_path('app/public/' . $paketVoucher->logo_unit);
+            if (file_exists($logoPath)) {
+                $logoBase64 = 'data:image/' . pathinfo($logoPath, PATHINFO_EXTENSION) . ';base64,' . base64_encode(file_get_contents($logoPath));
+                $data['logo_unit'] = $logoBase64;
+            } else {
+                $data['logo_unit'] = null;
+            }
+
+
+            // dd($data);
             $pdf = PDF::loadView('voucher-headers.layout', $data);
 
             $currentDate = Carbon::now()->format('Y-m-d');
@@ -276,7 +367,8 @@ class VoucherHeaderController extends Controller
             }
 
             // Save PDF to storage
-            $pdfFileName = $voucherNo . '.pdf';
+            $voucherFileName = $request->input('voucher_header_no');
+            $pdfFileName = $voucherFileName . '.pdf';
             $pdfFilePath = $patientDirectory . '/' . $pdfFileName;
 
             // Save PDF to storage
@@ -284,15 +376,7 @@ class VoucherHeaderController extends Controller
 
             // Add file path to the array
             $voucherFilePaths[] = $pdfFilePath;
-
-            // Create a new voucher detail for each distributed voucher
-            $voucher =  VoucherDetail::create([
-                'voucher_header_id' => $voucherHeader->id,
-                'voucher_no' => $voucherNo,
-                'qr_code' => $qrCodeBase64,
-                'issued_to_family_member' => false,
-            ]);
-        }
+        
 
         // Distribute family members across patients, enforcing max_sharing rule
         foreach ($familyMembers as $familyMember) {
@@ -441,20 +525,34 @@ class VoucherHeaderController extends Controller
 
     public function validateVoucher(Request $request)
     {
-        $patientId = $request->input('patient_id');
         $voucherNo = $request->input('voucher_no');
-        $packageName = $request->input('paket_voucher_name');
-        $purchaseDate = $request->input('purchase_date');
-        $expiryDate = $request->input('expiry_date');
-        $voucher_header_id = $request->input('voucher_header_id');
+        // dd($voucherNo);
 
+        // Fetch the voucher header and related details
+        $voucherHeader = VoucherHeader::with(['voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember'])
+        ->where('voucher_header_no', $voucherNo)
+        ->first();
+        // $headerVoucher = VoucherHeader::where('voucher_header_no', $voucherNo)->get();
+        // dd($voucherHeader);
 
+        // Check if the voucher header exists
+        if (!$voucherHeader) {
+            return back()->with('error', 'Voucher not found.');
+        }
+
+        // Fetch all voucher details for the given header
+        $patientVouchers = $voucherHeader->voucherDetail;
+
+        // $patientVouchers = VoucherDetail::with('voucherHeader') // Assuming a relationship is defined
+        //         ->whereHas('voucherHeader', function ($query) use ($voucherNo) {
+        //             $query->where('voucher_header_no', $voucherNo);
+        //         })
+        //         ->get();
 
         // Find all vouchers for the patient
-        $patientVouchers = VoucherDetail::whereHas('voucherHeader', function($query) use ($patientId, $voucher_header_id) {
-            $query->where('patient_id', $patientId)
-                  ->where('id', $voucher_header_id);
-        })->get();
+        // $patientVouchers = VoucherDetail::whereHas('voucherHeader', function($query) use ($voucherNo) {
+        //     $query->where('voucher_no', $voucherNo);
+        // })->get();
 
         // dd($patientVouchers);
 
@@ -463,47 +561,76 @@ class VoucherHeaderController extends Controller
         }
 
         // Total Voucher
-        $totalVoucher = count($patientVouchers);
+        $totalVoucher = $patientVouchers->count();
+        // dd($totalVoucher);
 
         // Remaining voucher
-        $remainingVoucher = VoucherDetail::where('is_used', '=', true)->where('voucher_header_id', $voucher_header_id)->get();
+        $remainingVouchers = $patientVouchers->where('is_used', false);
 
+        // dd($remainingVouchers);
 
+        // Calculate total remaining uses
+        $totalRemainingUses = $remainingVouchers->count();
+        // dd($totalRemainingUses);
 
         // Calculate total remaining uses across all vouchers
-        $totalRemainingUses = $totalVoucher - count($remainingVoucher);
+        // $totalRemainingUses = $totalVoucher - count($remainingVouchers);
+        // dd($totalRemainingUses);
 
         // Handle if no remaining uses
         if ($totalRemainingUses <= 0) {
             return back()->with('error', 'All vouchers have been used.');
         }
 
-        $data = Patient::with('familyMember')->where('id', $patientId)->get();
+        // $data = Patient::with('familyMember')->where('id', $patientId)->get();
         
 
-        $voucherDetails = VoucherHeader::with('voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember')->findOrFail($voucher_header_id);
+        // $voucherDetails = VoucherHeader::with('voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember')->findOrFail($voucher_header_id);
 
-        $table =  VoucherDetail::with([
-                    'voucherHeader.patient', // Join the 'patients' table through 'voucher_headers'
-                    'voucherHeader.patient.familyMember', // Join the 'family_members' table through 'patients'
-                    'voucherHistories' // Join the 'voucher_histories' table through 'voucher_details'
-                ])
-                ->whereHas('voucherHeader.patient', function ($query) use ($patientId) {
-                    $query->where('id', $patientId); // Filter by patient ID
-                })
-                ->where('is_used', true) // Filter for used vouchers
-                ->get();
+        // Fetch detailed voucher usage history
+        $usedVouchers = VoucherDetail::with([
+            'voucherHeader.patient', // Patient data
+            'voucherHeader.patient.familyMember', // Family member data
+            'voucherHistories' // Voucher usage history
+        ])
+            ->where('voucher_header_id', $voucherHeader->id)
+            ->where('is_used', true) // Only used vouchers
+            ->get();
+
+        // dd($usedVouchers);
+
+        // $table =  VoucherDetail::with([
+        //             'voucherHeader.patient', // Join the 'patients' table through 'voucher_headers'
+        //             'voucherHeader.patient.familyMember', // Join the 'family_members' table through 'patients'
+        //             'voucherHistories' // Join the 'voucher_histories' table through 'voucher_details'
+        //         ])
+        //         ->whereHas('voucherHeader.patient', function ($query) use ($patientId) {
+        //             $query->where('id', $patientId); // Filter by patient ID
+        //         })
+        //         ->where('is_used', true) // Filter for used vouchers
+        //         ->get();
         
 
+        // return view('vouchers.validate', [
+        //     'data' => $voucherDetails,
+        //     'tables' => $table,
+        //     'remainingUses' => $totalRemainingUses,
+        //     'packageName' => $packageName,
+        //     'voucherNo' => $voucherNo,
+        //     'purchaseDate' => $purchaseDate,
+        //     'expiryDate' => $expiryDate,
+        //     'patients' => $patientVouchers
+        // ]);
+        // Pass data to the view
         return view('vouchers.validate', [
-            'data' => $voucherDetails,
-            'tables' => $table,
-            'remainingUses' => $totalRemainingUses,
-            'packageName' => $packageName,
-            'voucherNo' => $voucherNo,
-            'purchaseDate' => $purchaseDate,
-            'expiryDate' => $expiryDate,
-            'patients' => $patientVouchers
+            // 'data' => $voucherHeader, // Complete voucher header details
+            'tables' => $usedVouchers, // Detailed voucher usage
+            'remainingUses' => $totalRemainingUses, // Remaining vouchers count
+            'packageName' => $voucherHeader->paketVoucher->name, // Package name
+            'voucherNo' => $voucherNo, // Voucher number
+            'purchaseDate' => $voucherHeader->purchase_date, // Purchase date
+            'expiryDate' => $voucherHeader->expiry_date, // Expiry date
+            // 'patients' => $patientVouchers // All vouchers for the header
         ]);
     }
 
@@ -666,25 +793,12 @@ class VoucherHeaderController extends Controller
 
     public function testVoucher()
     {
+        dd(route('evoucher'));
+    }
 
-        $data["email"] = "aatmaninfotech@gmail.com";
+    private function sendToGmail()
+    {
 
-        $data["title"] = "testVoucher";
-
-        $data["body"] = "This is Demo";
-
-        //attacment
-        $pdf = PDF::loadView('emails.voucher-sent', $data);
-  
-        //content on email body
-        Mail::send('emails.voucher-html', $data, function($message)use($data, $pdf) {
-
-            $message->to($data["email"], $data["email"])
-                    ->subject($data["title"])
-                    ->attachData($pdf->output(), "voucher.pdf");
-        });
-
-        dd('success');
     }
     
 }

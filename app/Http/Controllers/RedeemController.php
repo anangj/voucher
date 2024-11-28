@@ -75,7 +75,7 @@ class RedeemController extends Controller
         )
         ->get();
         
-dd($patients);
+// dd($patients);
         // // Redeem one use (find the first voucher with remaining uses)
         // foreach ($vouchers as $voucher) {
         //     if ($voucher->current_uses < $voucher->max_uses) {

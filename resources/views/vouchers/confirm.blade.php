@@ -118,19 +118,19 @@
                 {{-- Submit and Print Receipt Button --}}
                 <div class="flex justify-between mt-4">
                     {{-- Save Button --}}
-                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600" id="submitForm">
+                    <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" id="submitForm">
                         {{ __('Simpan') }}
                     </button>
 
                     {{-- Export to PDF Button --}}
-                    <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" id="exportPdfBtn">
+                    {{-- <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" id="exportPdfBtn">
                         {{ __('Export to PDF') }}
-                    </button>
+                    </button> --}}
 
                     {{-- Print Receipt Button (conditional, shown after successful save) --}}
-                    <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" onclick="printReceipt()" id="printReceiptBtn">
+                    {{-- <button type="button" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600" onclick="printReceipt()" id="printReceiptBtn">
                         {{ __('Cetak Bukti Bayar') }}
-                    </button>
+                    </button> --}}
                 </div>
             </form>
         </div>
@@ -153,18 +153,18 @@
                 });
 
                 // Handle form submission and export to PDF
-                document.getElementById('exportPdfBtn').addEventListener('click', function () {
-                    const form = document.getElementById('confirmationForm');
-                    const action = "{{ route('vouchers.export-receipt') }}";
+                // document.getElementById('exportPdfBtn').addEventListener('click', function () {
+                //     const form = document.getElementById('confirmationForm');
+                //     const action = "{{ route('vouchers.export-receipt') }}";
 
-                    // Change the form action to export the PDF
-                    form.action = action;
-                    form.method = 'POST';
-                    form.submit();
-                });
+                //     // Change the form action to export the PDF
+                //     form.action = action;
+                //     form.method = 'POST';
+                //     form.submit();
+                // });
 
                 // Optional: Enable Print Button if successful save
-                const printReceiptButton = document.getElementById('printReceiptBtn');
+                // const printReceiptButton = document.getElementById('printReceiptBtn');
                 // Enable it after successful response from backend
                 // printReceiptButton.disabled = false;
             });

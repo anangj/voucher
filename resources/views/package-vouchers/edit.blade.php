@@ -35,19 +35,7 @@
                         <x-input-error :messages="$errors->get('voucher_type')" class="mt-2"/>
                     </div>
 
-                    {{-- Description --}}
-                    <div class="form-group">
-                        <label for="description">{{__('Description')}}</label>
-                        <textarea id="description" name="description" class="form-control">{{ old('description', $data->description) }}</textarea>
-                        <x-input-error :messages="$errors->get('description')" class="mt-2"/>
-                    </div>
 
-                    {{-- Max Uses --}}
-                    <div class="form-group">
-                        <label for="max_uses">{{__('Max Uses per Voucher')}}</label>
-                        <input type="number" id="max_uses" name="max_uses" class="form-control" value="{{ old('max_uses', $data->max_uses) }}" required min="1">
-                        <x-input-error :messages="$errors->get('max_uses')" class="mt-2"/>
-                    </div>
 
                     {{-- Max Sharing --}}
                     <div class="form-group">

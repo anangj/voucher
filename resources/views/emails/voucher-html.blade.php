@@ -131,16 +131,9 @@
                 <p><strong>Payment Method:</strong> {{ $payment->payment_method }}</p>
             </div>
 
-            <a href="#" class="btn">View E-Voucher</a>
+            {{-- <a href="{{ route('evoucher') }}" class="btn" target="_blank">View E-Voucher</a> --}}
+            {{-- <a href="{{ url('/evoucher') }}" class="btn" target="_blank">View E-Voucher</a> --}}
 
-            <!-- Event Information -->
-            {{-- <div class="event-info">
-                <h3>Event Information</h3>
-                <p><strong>Event:</strong> {{ $paketVoucher->name }}</p>
-                <p><strong>Date:</strong> 06 January 2024 | 13:00 - 15:00 WIB</p>
-                <p><strong>Location:</strong> Aston Cirebon Hotel & Convention Center</p>
-                <p><strong>Ticket for:</strong> {{ $patient->name }}</p>
-            </div> --}}
 
             <!-- Purchase Details -->
             <div class="purchase-info">

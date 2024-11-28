@@ -32,13 +32,6 @@
                             value="{{$data->voucher_type}}" disabled>
                 </div>
 
-                <div class="input-group">
-                    <label for="max_uses" class="inline-block pb-2 text-sm font-medium font-Inter text-textColor dark:text-white">
-                        {{ __('Maximal Uses per Voucher') }}
-                    </label>
-                    <input name="max_uses" type="text" id="max_uses" class="w-full p-3 py-2 rounded cursor-not-allowed bg-slate-200 dark:bg-slate-900 dark:text-slate-300"
-                            value="{{$data->max_uses}}" disabled>
-                </div>
 
                 <div class="input-group">
                     <label for="max_sharing" class="inline-block pb-2 text-sm font-medium font-Inter text-textColor dark:text-white">

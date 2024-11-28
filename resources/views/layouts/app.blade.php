@@ -10,6 +10,8 @@
 
     {{-- Scripts --}}
     @vite(['resources/css/app.scss', 'resources/js/custom/store.js'])
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 </head>
 
 <body class="font-inter dashcode-app" id="body_class">

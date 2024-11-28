@@ -80,10 +80,17 @@ class PackageVoucherController extends Controller
             $imagePath = $request->file('image')->store('voucher_images', 'public');
         }
 
+        // Handle logo upload
+        $logoPath = null;
+        if ($request->hasFile('logo_unit')) {
+            $logoPath = $request->file('logo_unit')->store('logo_unit', 'public');
+        }
+
         // Merge the image path and TnC into the validated request data
         $validatedData = array_merge($request->validated(), [
             'image' => $imagePath,  // Store the image path
             'tnc' => $request->input('tnc'),  // Get TnC input from the request
+            'logo_unit' => $logoPath,
         ]);
 
         $packageVoucher = PackageVoucher::create($validatedData);

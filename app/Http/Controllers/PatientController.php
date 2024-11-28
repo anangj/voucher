@@ -7,6 +7,9 @@ use App\Models\PackageVoucher;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
@@ -30,7 +33,7 @@ class PatientController extends Controller
             ],
         ];
 
-        $data = Patient::all();
+        $data = Patient::orderBy('created_at', 'desc')->get();
         $paketVoucher = PackageVoucher::all();
 
         return view('patients.index',[
@@ -57,9 +60,43 @@ class PatientController extends Controller
      * @param  \App\Http\Requests\StorePatientRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePatientRequest $request)
+    public function store(Request $request)
     {
-        //
+        $patients = collect();
+        // dd($request->patients);
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->patients as $patientData) {
+                // Validate each patient data individually
+                $validatedData = $request->validate([
+                    'rm_no' => 'nullable|string|unique:patients,rm_no',
+                    'name' => 'nullable|string|max:255',
+                    'birthday' => 'nullable|date|before:today',
+                    'email' => 'nullable|email|unique:patients,email',
+                    'phone' => 'nullable|string|max:15',
+                ]);
+
+                // Create patient record
+                $patient = Patient::create([
+                    'rm_no' => $patientData['no_rm'],
+                    // 'registration_no' => $patientData['registration_no'],
+                    'name' => $patientData['name_real'],
+                    'birthday' => \Carbon\Carbon::parse($patientData['tgl_lahir'])->format('Y-m-d'),
+                    'email' => $patientData['email'] ?? null,
+                    'phone' => $patientData['phone'] ?? null,
+                ]);
+
+                $patients->push($patient->id);
+            }
+
+            DB::commit();
+            return response()->json(['status' => 'success', 'selected_patients' => $patients], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -179,4 +216,73 @@ class PatientController extends Controller
     {
         //
     }
+
+    // public function searchPatient(Request $request)
+    // {
+    //     // dd($request->query('rm_no'));
+    //     $baseUrl = 'http://192.168.9.9/devel/';
+    //     $params = [
+    //         'mod' => 'api',
+    //         'cmd' => 'get_patient',
+    //         // 'no_rm' => $request->query('rm_no'),
+    //         'name_pasien' => 'anang',
+    //         'return_type' => 'json',
+    //     ];
+
+    //     // try {
+    //         $response = Http::withHeaders([
+    //                 'Accept' => 'application/json',
+    //                 'Content-Type' => 'application/json',
+    //                 'Authorization' => 'Basic cnNjaXB1dHJhOnJzY2lwdXRyYQ==',
+    //                 'Cookie' => 'CIPDEV=b2fd2eqqpqh9v3e6d91fd56vk3'
+    //             ])
+    //             ->get($baseUrl, $params);
+    //             dd($response);
+    //         if ($response->successful()) {
+    //             $data = $response->json();
+                
+    //             return response()->json(['status' => 'success', 'patients' => $data]);
+    //         } else {
+    //             return response()->json(['status' => 'error', 'message' => 'Failed to fetch patients.'], $response->status());
+    //         }
+    //     // } catch (\Exception $e) {
+    //     //     return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    //     // }
+    // }
+    
+
+    public function searchPatient(Request $request)
+    {
+        // dd($request);
+        $client = new Client();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic cnNjaXB1dHJhOnJzY2lwdXRyYQ==',
+        ];
+
+        // Construct URL with query parameters
+        $url = 'http://192.168.9.9/devel/?mod=api&cmd=get_patient&return_type=json' .
+            // '&no_rm=' . $request->query('rm_no') .
+            '&nama_pasien=' . urlencode($request->name) . 
+            '&tgl_lahir=' . urlencode($request->bod);
+            // dd($url);
+
+        try {
+            $response = $client->get($url, [
+                'headers' => $headers,
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                $data = json_decode($response->getBody(), true);
+                // dd($data);
+                return response()->json(['status' => 'success', 'patients' => $data]);
+            } else {
+                return response()->json(['status' => 'error', 'message' => 'Failed to fetch patients.'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
 }

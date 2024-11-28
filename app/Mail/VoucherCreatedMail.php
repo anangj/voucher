@@ -46,6 +46,6 @@ class VoucherCreatedMail extends Mailable
                         'patient' => $this->patient,
                         'payment' => $this->payment,
                     ])
-                    ->subject('Your Voucher Details');
+                    ->subject('Your Voucher Orders');
     }
 }

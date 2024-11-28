@@ -76,31 +76,19 @@
                         @foreach ($tables as $item)
                             <tr>
                                 <td class="border border-gray-300 px-4 py-2">
-                                    {{$item->voucherHistories[0]['performed_by']}}
-                                </td>
-                                {{-- <td class="border border-gray-300 px-4 py-2">
-                                    @if ($item->issued_to_family_member === 1)
-                                        {{ $data->patient->familyMember->first()->name }}  
+                                    {{-- Check if issued to family member or patient --}}
+                                    @if ($item->issued_to_family_member)
+                                        {{ $item->voucherHeader->patient->familyMember->first()->name ?? 'N/A' }}
                                     @else
-                                        {{ $data->patient->name }}  
-                                    @endif
-                                </td> --}}
-                                {{-- <td class="border border-gray-300 px-4 py-2">
-                                    @if ($item->issued_to_family_member === 1)
-                                        {{ $data->patient->familyMember->first()->birthday }}
-                                    @else
-                                        {{ $data->patient->birthday }}
+                                        {{ $item->voucherHeader->patient->name ?? 'N/A' }}
                                     @endif
                                 </td>
                                 <td class="border border-gray-300 px-4 py-2">
-                                    @if ($item->issued_to_family_member === 1)
-                                        {{ $data->patient->familyMember->first()->phone }}
-                                    @else
-                                        {{ $data->patient->phone }}
-                                    @endif
-                                </td> --}}
-                                <td class="border border-gray-300 px-4 py-2">{{ $item->voucher_no }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $item->using_date }}</td>
+                                    {{ $item->voucher_no }}
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    {{ $item->using_date ?? 'Not Used' }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

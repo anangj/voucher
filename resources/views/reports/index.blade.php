@@ -42,7 +42,6 @@
                                         <th scope="col" class="table-th"> {{__('Voucher Name')}} </th>
                                         <th scope="col" class="table-th"> {{__('Price')}} </th>
                                         <th scope="col" class="table-th"> {{__('Payment Date')}} </th>
-                                        <th scope="col" class="table-th"> {{__('Actions')}} </th>
                                     </tr>
                                 </thead>
 
@@ -54,10 +53,6 @@
                                             <td class="px-6 py-4">{{ $sale->voucherHeader->paketVoucher->name }}</td>
                                             <td class="px-6 py-4">{{ number_format($sale->amount) }}</td>
                                             <td class="px-6 py-4">{{ $sale->created_at->format('Y-m-d') }}</td>
-                                            <td class="px-6 py-4">
-                                                <!-- Add any action buttons, like view details -->
-                                                <a href="#" class="btn btn-sm btn-primary">View</a>
-                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

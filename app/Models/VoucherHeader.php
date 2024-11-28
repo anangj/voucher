@@ -20,6 +20,7 @@ class VoucherHeader extends Model
         'paket_voucher_id',
         'patient_id',
         'voucher_header_no',
+        'qr_code_header',
         'purchase_date',
         'expiry_date',
         'current_uses',
