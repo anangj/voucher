@@ -321,7 +321,7 @@ class VoucherHeaderController extends Controller
             $data = [
                 'number' => 1,
                 'voucher_id' => $idVoucher,
-                'voucher_no' => $voucherNo,
+                'voucher_no' => $request->input('voucher_header_no'),
                 'patient_id' => $selectedPatients,
                 'patient_name' => $patientName,
                 'paket_voucher_name' => $paketVoucher->name,

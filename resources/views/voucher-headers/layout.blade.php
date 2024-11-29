@@ -581,9 +581,9 @@
                         <tr>
                             <td style="text-align: center; padding: 10px 10px">
                                 <span style="height: 80px">
-                                    <img src="data:image/png;base64,{{ $qrCode }}"  style="height: 80px; padding-top: 8px" />
+                                    <img src="data:image/png;base64,{{ $qrCode }}"  style="height: 80px; padding-top: 10px" />
                                 </span>
-                                <span style="display: block; margin: 0; line-height: 1.2; font-size: 12px;"><br /><b>TICKET {{$number}} of {{$total_distribute}}</b></span>
+                                
                             </td>
                         </tr>
                         <tr>
@@ -610,7 +610,7 @@
                   ">
                                 <div class="editable__">
                                     <b>
-                                        {{$voucher_id}}
+                                        {{$voucher_no}}
                                         <br />{{$patient_name}}
                                     </b>
                                     <br />Ordered on {{$purchase_date}}
