@@ -115,14 +115,13 @@
                 paketVoucherSelect.addEventListener('change', function () {
                     const selectedOption = this.options[this.selectedIndex];
                     maxSharing = parseInt(selectedOption.getAttribute('data-max-sharing'), 10) || 0;
-                    console.log(maxSharing);
                     clearFamilyMembers();
                     updateAddFamilyBtn();
                 });
 
                 // Handle Add Family Button click
                 addFamilyBtn.addEventListener('click', function () {
-                    if (maxSharing > 1) {
+                    if (maxSharing = 1) {
                         const familyMember = { name: '', birthday: '', phone: '', email: '' };
                         addFamilyMemberRow(familyMember);
                         familyCount++;
