@@ -49,7 +49,7 @@
 
                     <div class="mb-4">
                         <label class="font-semibold block">{{ __('No. Voucher:') }}</label>
-                        <input type="text" value="" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
+                        <input type="text" value="{{$data->voucher_header_no}}" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
                     </div>
 
                     <div class="mb-4">
