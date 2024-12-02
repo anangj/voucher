@@ -75,6 +75,7 @@
                                     <tr>
                                         <th scope="col" class="table-th"> {{__('Patient')}} </th>
                                         <th scope="col" class="table-th"> {{ __('Paket Voucher Name') }} </th>
+                                        <th scope="col" class="table-th"> {{ __('Voucher No') }} </th>
                                         <th scope="col" class="table-th"> {{__('Purchase Date')}} </th>
                                         <th scope="col" class="table-th"> {{__('Expiry Date')}} </th>
                                         <th scope="col" class="table-th"> {{__('Status')}} </th>
@@ -87,6 +88,7 @@
                                     <tr>
                                         <td class="table-td">{{ $voucher->patient->name }}</td>
                                         <td class="table-td">{{ $voucher->paketVoucher->name ?? 'N/A' }}</td>
+                                        <td class="table-td">{{ $voucher->voucher_header_no }}</td>
                                         <td class="table-td">{{ $voucher->purchase_date }}</td>
                                         <td class="table-td">{{ $voucher->expiry_date }}</td>
                                         <td>

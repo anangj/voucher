@@ -19,7 +19,7 @@
                     </div>
 
                     <!-- Right-aligned button -->
-                    <div class="flex justify-end items-center xl:col-span-4 lg:col-span-2">
+                    <div class="flex justify-start items-center xl:col-span-4 lg:col-span-2">
                         <button id="openValidateVoucherModal" class="btn inline-flex justify-center btn-outline-dark capitalize">
                             {{ __('Validate Voucher') }}
                         </button>
