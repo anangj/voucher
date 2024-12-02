@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('registration_no')->nullable();
             $table->string('name');
             $table->date('birthday');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->timestamps();
         });

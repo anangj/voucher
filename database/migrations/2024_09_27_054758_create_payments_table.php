@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->date('purchase_date');
             $table->string('payment_method');
+            $table->string('no_card')->nullable();
             $table->string('status')->default('completed');
             $table->timestamps();
 

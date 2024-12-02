@@ -73,7 +73,7 @@ class PatientController extends Controller
                     'rm_no' => 'nullable|string|unique:patients,rm_no',
                     'name' => 'nullable|string|max:255',
                     'birthday' => 'nullable|date|before:today',
-                    'email' => 'nullable|email|unique:patients,email',
+                    'email' => 'nullable|email',
                     'phone' => 'nullable|string|max:15',
                 ]);
 

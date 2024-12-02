@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('image')->after('max_sharing');
             $table->decimal('amount', 10, 2)->after('image');
             $table->longText('tnc')->after('amount');
+            $table->string('logo_unit')->after('tnc')->nullable();
         });
     }
 
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->dropColumn('image');
             $table->dropColumn('amount');
             $table->dropColumn('tnc');
+            $table->dropColumn('logo_unit');
         });
     }
 };
