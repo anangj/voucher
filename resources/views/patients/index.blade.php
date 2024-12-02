@@ -240,7 +240,6 @@
                         newTable.innerHTML = `
                             <thead class="bg-slate-200 dark:bg-slate-700">
                                 <tr>
-                                    <th scope="col" class="table-th">Select</th>
                                     <th scope="col" class="table-th">RM</th>
                                     <th scope="col" class="table-th">Patient Name</th>
                                     <th scope="col" class="table-th">Birthdate</th>
@@ -262,7 +261,6 @@
                         patients.forEach((patient, index) => {
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                                <td class='table-td'><input type="checkbox" class="select-item" value="${index}"></td>
                                 <td class='table-td'>${patient.no_rm}</td>
                                 <td class='table-td'>${patient.title} ${patient.name_real}</td>
                                 <td class='table-td'>${patient.tgl_lahir}</td>
