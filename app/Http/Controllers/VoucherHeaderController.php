@@ -395,7 +395,8 @@ class VoucherHeaderController extends Controller
             'voucher_header_id' => $voucherHeader->id,
             'amount' => $paketVoucher->amount,
             'purchase_date' => $request->input('purchase_date'),
-            'payment_method' => $request->input('payment_method')
+            'payment_method' => $request->input('payment_method'),
+            'no_card' => $request->input('no_card')
         ]);
 
         $patient = Patient::find($selectedPatients);
@@ -644,7 +645,6 @@ class VoucherHeaderController extends Controller
         $expiry_date = $request->expiry_date ? $request->expiry_date : null;
 
 
-        // dd($family_email);
         // Retrieve the selected_patients from the request and decode it
         $selectedPatientsIds = json_decode($request->input('selected_patients'), true);
         if (is_array($selectedPatientsIds) && !empty($selectedPatientsIds)) {

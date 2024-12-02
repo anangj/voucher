@@ -96,7 +96,7 @@
                 </div>
 
                 {{-- Voucher Price --}}
-                <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-3 gap-4 mb-4">
                     {{-- Voucher Price --}}
                     <div>
                         <label for="voucher_price" class="font-bold">{{ __('Harga Voucher :') }}</label>
@@ -111,7 +111,12 @@
                             <option value="Credit">{{ __('Credit Card') }}</option>
                             <option value="Debit">{{ __('Debit Card') }}</option>
                             <option value="Cash">{{ __('Cash') }}</option>
+                            <option value="Transfer">{{ __('Transfer') }}</option>
                         </select>
+                    </div>
+                    <div>
+                        <label for="no_card" class="font-bold">{{ __('Note : ')}}</label>
+                        <input type="text" id="no_card" name="no_card" class="form-control w-full">
                     </div>
                 </div>
 

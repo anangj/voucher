@@ -10,7 +10,7 @@ class Payment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'patient_id', 'voucher_header_id', 'amount', 'purchase_date', 'payment_method', 'status'];
+    protected $fillable = ['id', 'patient_id', 'voucher_header_id', 'amount', 'purchase_date', 'payment_method', 'status', 'no_card'];
 
     public function patient()
     {
