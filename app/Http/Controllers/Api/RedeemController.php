@@ -30,8 +30,8 @@ class RedeemApiController extends Controller
 
         // Retrieve the voucher by its number
         $voucher = VoucherDetail::where('voucher_no', $request->voucher_no)
-                    ->where('is_used', false)
-                    ->first();
+            ->where('is_used', false)
+            ->first();
 
         // Check if voucher exists and hasn't been used
         if (!$voucher) {
@@ -40,7 +40,8 @@ class RedeemApiController extends Controller
 
         // Check voucher expiry date
         $voucherHeader = VoucherHeader::find($voucher->voucher_header_id);
-        if ($voucherHeader && now()->greaterThan($voucherHeader->expiry_date)) {
+
+        if ($voucherHeader && now()->greaterThanOrEqualTo($voucherHeader->expiry_date)) {
             return response()->json(['error' => 'Voucher has expired.'], 400);
         }
 
@@ -57,6 +58,16 @@ class RedeemApiController extends Controller
             'bill_no' => $request->input('bill_no'),
             'bill_date' => $request->input('bill_date'),
         ]);
+
+        // Check if all voucher details are used
+        $allVouchersUsed = VoucherDetail::where('voucher_header_id', $voucher->voucher_header_id)
+            ->where('is_used', false)
+            ->doesntExist();
+
+        if ($allVouchersUsed) {
+            $voucherHeader->status = 'all redeem';
+            $voucherHeader->save();
+        }
 
         return response()->json([
             'message' => 'Voucher successfully redeemed.',
@@ -80,13 +91,13 @@ class RedeemApiController extends Controller
                 $query->where('is_used', false); // Unused vouchers
             },
         ])
-        ->where('voucher_header_no', $voucherNo)
-        ->where('expiry_date', '>=', now()->format('Y-m-d')) // Ensure the voucher is not expired
-        ->first();
-            
+            ->where('voucher_header_no', $voucherNo)
+            ->where('expiry_date', '>=', now()->format('Y-m-d')) // Ensure the voucher is not expired
+            ->first();
+
         if ($voucherHeader) {
             $voucherDetails = $voucherHeader->voucherDetail;
-        
+
             // Check if there are unused vouchers
             if ($voucherDetails->isEmpty()) {
                 return response()->json(['message' => 'No unused vouchers available or the voucher has expired.'], 404);
@@ -94,7 +105,7 @@ class RedeemApiController extends Controller
         } else {
             return response()->json(['message' => 'Voucher not found or expired.'], 404);
         }
-        
+
         // Format response
         $response = [
             'voucher_details' => $voucherHeader->voucherDetail->map(function ($detail) {
@@ -110,5 +121,4 @@ class RedeemApiController extends Controller
             'data' => $response,
         ], 200);
     }
-
 }

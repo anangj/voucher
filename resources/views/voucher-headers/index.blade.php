@@ -101,6 +101,10 @@
                                                 <div class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-success-500 bg-success-500">
                                                     {{ ucfirst($voucher->status) }}
                                                 </div>
+                                            @elseif ($voucher->status == 'all redeem')
+                                                <div class="inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 text-warning-500 bg-warning-500">
+                                                    {{ ucfirst($voucher->status) }}
+                                                </div>
                                             @endif
                                         </td>
 

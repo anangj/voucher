@@ -258,7 +258,7 @@ class VoucherHeaderController extends Controller
             'voucher_header_no' => $request->input('voucher_header_no'),
             'qr_code_header' => $qrCodeBase64Header,
             'purchase_date' => $request->input('purchase_date'),
-            'expiry_date' => $request->input('expiry_date'),
+            'expiry_date' => Carbon::parse($request->input('expiry_date'))->endOfDay(),
             'current_uses' => 0,
             'status' => 'active',
         ]);
