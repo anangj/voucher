@@ -157,7 +157,7 @@
                     console.log('familyCount', familyCount);
                     console.log('maxSharing', maxSharing);
                     
-                    addFamilyBtn.disabled = familyCount >= maxSharing || maxSharing === 0;
+                    addFamilyBtn.disabled = familyCount >= (maxSharing - 1) || maxSharing === 0;
                 }
 
                 // Save family members to localStorage
