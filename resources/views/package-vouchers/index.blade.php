@@ -36,10 +36,10 @@
                 </div>
             </header>
             <div class="px-6 pb-6 card-body">
-                <div class="-mx-6 overflow-x-auto">
+                <div class="-mx-6 overflow-x-auto dashcode-data-table">
                     <div class="inline-block min-w-full align-middle">
                         <div class="overflow-hidden">
-                            <table class="w-full divide-y table-fixed divide-slate-100 dark:divide-slate-700">
+                            <table class="w-full divide-y table-fixed divide-slate-100 dark:divide-slate-700 data-table">
                                 <thead class="bg-slate-200 dark:bg-slate-700">
                                     <tr>
                                         <th scope="col" class="table-th ">
@@ -56,6 +56,9 @@
                                         </th> --}}
                                         <th scope="col" class="table-th ">
                                             {{ __('Maximal Sharing') }}
+                                        </th>
+                                        <th scope="col" class="table-th ">
+                                            {{ __('Created At') }}
                                         </th>
                                         <th scope="col" class="table-th">
                                             {{ __('Action') }}
@@ -79,6 +82,9 @@
                                             </td> --}}
                                             <td class="table-td">
                                                 {{$item->max_sharing}}
+                                            </td>
+                                            <td class="table-td">
+                                                {{$item->created_at}}
                                             </td>
                                             <td class="table-td">
                                                 <div class="flex space-x-1">
@@ -169,6 +175,26 @@
         </div>
     </div>
     @push('scripts')
+    <script type="module">
+        // data table validation
+        $("#data-table, .data-table").DataTable({
+            dom: "<'grid grid-cols-12 gap-5 px-6 mt-6'<'col-span-4'l><'col-span-8 flex justify-end'f><'#pagination.flex items-center'>><'min-w-full't><'flex justify-end items-center'p>",
+            paging: true,
+            ordering: true,
+            info: false,
+            searching: true,
+            lengthChange: true,
+            lengthMenu: [10, 25, 50, 100],
+            language: {
+                lengthMenu: "Show _MENU_ entries",
+                paginate: {
+                    previous: `<iconify-icon icon="ic:round-keyboard-arrow-left"></iconify-icon>`,
+                    next: `<iconify-icon icon="ic:round-keyboard-arrow-right"></iconify-icon>`,
+                },
+                search: "Search:",
+            },
+        });
+    </script>
     <script>
         function sweetAlertDelete(event, formId) {
             event.preventDefault();
