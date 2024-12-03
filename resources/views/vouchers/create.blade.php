@@ -121,7 +121,7 @@
 
                 // Handle Add Family Button click
                 addFamilyBtn.addEventListener('click', function () {
-                    if (maxSharing > 1) {
+                    if (maxSharing) {
                         const familyMember = { name: '', birthday: '', phone: '', email: '' };
                         addFamilyMemberRow(familyMember);
                         familyCount++;
@@ -154,7 +154,7 @@
 
                 // Update the "Add Family Member" button state
                 function updateAddFamilyBtn() {
-                    addFamilyBtn.disabled = familyCount >= 1 || maxSharing === 0;
+                    addFamilyBtn.disabled = familyCount >= maxSharing || maxSharing === 0;
                 }
 
                 // Save family members to localStorage
