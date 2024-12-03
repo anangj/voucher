@@ -121,7 +121,7 @@
 
                 // Handle Add Family Button click
                 addFamilyBtn.addEventListener('click', function () {
-                    if (maxSharing) {
+                    if (maxSharing > 1) {
                         const familyMember = { name: '', birthday: '', phone: '', email: '' };
                         addFamilyMemberRow(familyMember);
                         familyCount++;
