@@ -13,7 +13,7 @@
         </div>
         <div class="overflow-hidden rounded-md">
             <div class="px-5 bg-white dark:bg-slate-800 py-7">
-                <form method="POST" action="{{ route('packages.update', $data)}}">
+                <form id="editPackageForm" method="POST" action="{{ route('packages.update', $data)}}">
                     @csrf
                     @method('PUT')
 
