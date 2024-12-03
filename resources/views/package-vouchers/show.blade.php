@@ -1,7 +1,13 @@
 <x-app-layout>
     <div>
-        <div class="mb-6 ">
+        <div class="items-center justify-between block mb-6 sm:flex">
             <x-breadcrumb :pageTitle="$pageTitle" :breadcrumbItems="$breadcrumbItems" />
+            <div class="text-end">
+                <a class="btn inline-flex justify-center btn-dark rounded-[25px] items-center !p-2 !px-3" href="{{ route('packages.index') }}">
+                    <iconify-icon class="mr-1 text-lg" icon="ic:outline-arrow-back"></iconify-icon>
+                    {{ __('Back') }}
+                </a>
+            </div>
         </div>
 
         <div class="max-w-4xl p-5 pb-6 m-auto bg-white rounded-md dark:bg-slate-800">
@@ -41,6 +47,32 @@
                             value="{{$data->max_sharing}}" disabled>
                 </div>
 
+                <div class="input-group">
+                    <label for="amount" class="inline-block pb-2 text-sm font-medium font-Inter text-textColor dark:text-white">
+                        {{ __('Amount') }}
+                    </label>
+                    <input name="amount" type="text" id="amount" 
+                           class="w-full p-3 py-2 rounded cursor-not-allowed bg-slate-200 dark:bg-slate-900 dark:text-slate-300"
+                           value="Rp {{ number_format($data->amount, 0, ',', '.') }}" disabled>
+                </div>
+                
+
+                <div class="input-group">
+                    <label for="total_distribute" class="inline-block pb-2 text-sm font-medium font-Inter text-textColor dark:text-white">
+                        {{ __('Total Distribute') }}
+                    </label>
+                    <input name="total_distribute" type="text" id="total_distribute" class="w-full p-3 py-2 rounded cursor-not-allowed bg-slate-200 dark:bg-slate-900 dark:text-slate-300"
+                            value="{{$data->total_distribute}}" disabled>
+                </div>
+
+            </div>
+            <div class="mt-6">
+                <label for="tnc" class="inline-block pb-2 text-sm font-medium font-Inter text-textColor dark:text-white">
+                    {{ __('Terms and Conditions') }}
+                </label>
+                <div id="quillContent" class="p-4 bg-slate-200 rounded dark:bg-slate-900 dark:text-slate-300">
+                    {!! $data->tnc !!}
+                </div>
             </div>
         </div>
 

@@ -430,7 +430,7 @@ class VoucherHeaderController extends Controller
             ],
         ];
 
-        $voucherDetails = VoucherHeader::with('voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember')->findOrFail($id);
+        $vouchers = VoucherHeader::with('voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember', 'payment')->findOrFail($id);
 
         // $table = VoucherDetail::where('voucher_header_id', $id)->whereNotNull('is_used')->get();
 
@@ -446,7 +446,7 @@ class VoucherHeaderController extends Controller
 
         // dd($table);
         return view('voucher-headers.show', [
-            'data' => $voucherDetails,
+            'data' => $vouchers,
             'tables' => $table,
             'breadcrumbItems' => $breadcrumbItems,
             'pageTitle' => 'Detail Voucher',
@@ -622,9 +622,10 @@ class VoucherHeaderController extends Controller
         //     'expiryDate' => $expiryDate,
         //     'patients' => $patientVouchers
         // ]);
+        $family = $voucherHeader->patient->familyMember->name ?? '';
         // Pass data to the view
         return view('vouchers.validate', [
-            // 'data' => $voucherHeader, // Complete voucher header details
+            'family' => $family,
             'tables' => $usedVouchers, // Detailed voucher usage
             'remainingUses' => $totalRemainingUses, // Remaining vouchers count
             'packageName' => $voucherHeader->paketVoucher->name, // Package name
@@ -736,6 +737,12 @@ class VoucherHeaderController extends Controller
             $payment_method = Payment::select('payment_method')->where('patient_id', $request->input('patient_id'));
         }
 
+        if ($request->input('no_card') !== null) {
+            $no_card = $request->input('no_card');
+        } else {
+            $no_card = '';
+        }
+
         function cleanVoucherPrice($price) {
             // Remove 'Rp' and dots
             $cleanedPrice = str_replace(['Rp', '.', ','], '', $price);
@@ -783,6 +790,7 @@ class VoucherHeaderController extends Controller
             'patient' => $patient,
             'voucher_price' => $voucher_price,
             'payment_method' => $payment_method,
+            'no_card' => $no_card,
             'paketDetail' => $paketDetail,
             'terbilang' => $terbilang,
         ]);

@@ -29,6 +29,8 @@ class UpdatePackageVoucherRequest extends FormRequest
             'voucher_type' => 'sometimes|string',
             'max_uses' => 'sometimes|integer|min:1',
             'max_sharing' => 'sometimes|integer|min:0',
+            'tnc' => 'nullable|string',
+            'amount' => 'nullable|string'
         ];
     }
 }

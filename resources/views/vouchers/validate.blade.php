@@ -35,6 +35,11 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="font-semibold block">{{ __('Nama Keluarga') }}</label>
+                        <input type="text" value="{{ $family }}" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="font-semibold block">{{ __('Digunakan oleh:') }}</label>
                         {{-- <p class="text-gray-600 text-sm">{{ __('[lookup list nama pasien terdaftar, beserta tgl transaksi voucher]') }}</p> --}}
                     </div>
@@ -65,7 +70,7 @@
                     <thead class="bg-gray-200">
                         <tr>
                             {{-- <th class="border border-gray-300 px-4 py-2">{{ __('No.') }}</th> --}}
-                            <th class="border border-gray-300 px-4 py-2">{{ __('Nama') }}</th>
+                            <th class="border border-gray-300 px-4 py-2">{{ __('Nama Pasien') }}</th>
                             {{-- <th class="border border-gray-300 px-4 py-2">{{ __('Tanggal Lahir') }}</th>
                             <th class="border border-gray-300 px-4 py-2">{{ __('No. Telepon') }}</th> --}}
                             <th class="border border-gray-300 px-4 py-2">{{ __('No Voucher Terpakai') }}</th>

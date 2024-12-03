@@ -55,6 +55,11 @@ class VoucherHeader extends Model
         return $this->hasMany(VoucherHistory::class);
     }
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
     public function reminders()
     {
         return $this->hasMany(Reminder::class);

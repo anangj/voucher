@@ -149,6 +149,8 @@ class PackageVoucherController extends Controller
         ];
 
         $data = PackageVoucher::findOrFail($id);
+        // Format amount in Rupiah
+        $data->formatted_amount = number_format($data->amount, 0, ',', '.');
 
         return view('package-vouchers.edit',[
             'data' => $data,
@@ -166,8 +168,21 @@ class PackageVoucherController extends Controller
      */
     public function update(UpdatePackageVoucherRequest $request, $id)
     {
+        // Find the package voucher by ID
         $packageVoucher = PackageVoucher::findOrFail($id);
-        $packageVoucher->update($request->validated());
+
+        // Get the validated data from the request
+        $validatedData = $request->validated();
+
+        // Convert the formatted amount to numeric
+        if (isset($validatedData['amount'])) {
+            $validatedData['amount'] = (int) str_replace(['.', 'Rp', ' '], '', $validatedData['amount']);
+        }
+
+        // Update the package voucher with the processed data
+        $packageVoucher->update($validatedData);
+
+        // Redirect back with success message
         return redirect()->route('packages.index')->with('message', 'Paket Voucher updated successfully.');
     }
 

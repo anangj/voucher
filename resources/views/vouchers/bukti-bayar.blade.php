@@ -161,7 +161,7 @@
             <tbody>
                 <tr>
                     <td> {{ $purchase_date }}</td>
-                    <td> {{$payment_method}}</td>
+                    <td> {{$payment_method}} - {{$no_card}}</td>
                     <td class="right-align"> {{$voucher_price}}</td>
                 </tr>
             </tbody>

@@ -22,7 +22,8 @@
                 <input type="hidden" id="patient_id" name="patient_id" value="{{ $data->patient->id }}">
                 <input type="hidden" id="paket_voucher_id" name="paket_voucher_id" value="{{ $data->paketVoucher->id }}">
                 <input type="hidden" id="voucher_price" name="voucher_price" value="Rp {{ number_format($data->paketVoucher->amount, 0, ',', '.') }}">
-                <input type="hidden" id="payment_method" name="payment_method" value="{{ $data->paketVoucher->name }}">
+                <input type="hidden" id="payment_method" name="payment_method" value="{{ $data->payment->payment_method}}">
+                <input type="hidden" id="no_card" name="no_card" value="{{ $data->payment->no_card}}">
                 
 
                 <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
@@ -81,6 +82,7 @@
                         <tr>
                             {{-- <th class="border border-gray-300 px-4 py-2">{{ __('No.') }}</th> --}}
                             <th class="border border-gray-300 px-4 py-2">{{ __('Nama Pasien') }}</th>
+                            <th class="border border-gray-300 px-4 py-2">{{ __('Nama Keluarga') }}</th>
                             <th class="border border-gray-300 px-4 py-2">{{ __('Tanggal Lahir') }}</th>
                             <th class="border border-gray-300 px-4 py-2">{{ __('No. Telepon') }}</th>
                             <th class="border border-gray-300 px-4 py-2">{{ __('No Voucher Terpakai') }}</th>
@@ -98,6 +100,7 @@
                                         {{ $data->patient->name }}  {{-- Use patient's name --}}
                                     @endif
                                 </td>
+                                <td class="border border-gray-300 px-4 py-2">{{ $data->patient->familyMember ? $data->patient->familyMember->first()->name : '' }}</td>
                                 <td class="border border-gray-300 px-4 py-2">
                                     @if ($item->issued_to_family_member === 1)
                                         {{ $data->patient->familyMember->first()->birthday }}

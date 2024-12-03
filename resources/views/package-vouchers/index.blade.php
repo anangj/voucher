@@ -57,7 +57,7 @@
                                         <th scope="col" class="table-th ">
                                             {{ __('Maximal Sharing') }}
                                         </th>
-                                        <th scope="col" class="w-20 table-th">
+                                        <th scope="col" class="table-th">
                                             {{ __('Action') }}
                                         </th>
                                     </tr>
@@ -81,6 +81,37 @@
                                                 {{$item->max_sharing}}
                                             </td>
                                             <td class="table-td">
+                                                <div class="flex space-x-1">
+                                                    {{-- @can('voucher update') --}}
+                                                    <a href="{{ route('packages.edit', $item->id) }}" class="btn btn-sm btn-warning">
+                                                        <iconify-icon icon="mdi:pencil-outline" class="text-xl"></iconify-icon>
+                                                    </a>
+                                                    {{-- @endcan --}}
+    
+                                                    {{-- @can('voucher show') --}}
+                                                    <a href="{{ route('packages.show', $item->id) }}" class="btn btn-sm btn-primary">
+                                                        <iconify-icon icon="mdi:eye-outline" class="text-xl"></iconify-icon>
+                                                    </a>
+                                                    {{-- @endcan --}}
+    
+                                                    {{-- @if ($voucher->status === 'unassigned')
+                                                    <a href="{{ route('vouchers.assign', ['paketVoucherId' => $voucher->paket_voucher_id]) }}" class="btn btn-sm btn-success">
+                                                        {{ __('Assign') }}
+                                                    </a>
+                                                    @endif --}}
+    
+                                                    {{-- @can('voucher delete') --}}
+                                                    <form id="deleteForm{{$item->id}}" action="{{ route('packages.destroy', $item->id) }}" method="POST" onclick="sweetAlertDelete(event, 'deleteForm{{ $item->id }}')" type="submit">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <iconify-icon icon="mdi:delete-outline" class="text-xl"></iconify-icon>
+                                                        </button>
+                                                    </form>
+                                                    {{-- @endcan --}}
+                                                </div>
+                                            </td>
+                                            {{-- <td class="table-td">
                                                 <div>
                                                     <div class="relative">
                                                       <div class="relative dropdown">
@@ -119,7 +150,7 @@
                                                       </div>
                                                     </div>
                                                   </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @empty
                                         <tr class="relative border border-slate-100 dark:border-slate-900">
