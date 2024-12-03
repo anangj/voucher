@@ -154,9 +154,6 @@
 
                 // Update the "Add Family Member" button state
                 function updateAddFamilyBtn() {
-                    console.log('familyCount', familyCount);
-                    console.log('maxSharing', maxSharing);
-                    
                     addFamilyBtn.disabled = familyCount >= (maxSharing - 1) || maxSharing === 0;
                 }
 
