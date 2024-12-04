@@ -18,8 +18,9 @@ class VoucherSalesExport implements FromArray, WithHeadings
                 'Patient Name' => $sale->patient->name,
                 'Voucher Name' => $sale->voucherHeader->paketVoucher->name,
                 'Price' => number_format($sale->amount),
-                'Payment Method' => $sale->payment_method,
                 'Payment Date' => $sale->created_at->format('Y-m-d'),
+                'Payment Method' => $sale->payment_method,
+                'Card' => $sale->no_card
             ];
         }
 
@@ -33,8 +34,9 @@ class VoucherSalesExport implements FromArray, WithHeadings
             'Patient Name',
             'Voucher Name',
             'Price',
-            'Payment Method',
             'Payment Date',
+            'Payment Method',
+            'Card'
         ];
     }
 }

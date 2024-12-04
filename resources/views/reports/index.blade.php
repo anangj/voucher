@@ -42,6 +42,8 @@
                                         <th scope="col" class="table-th"> {{__('Voucher Name')}} </th>
                                         <th scope="col" class="table-th"> {{__('Price')}} </th>
                                         <th scope="col" class="table-th"> {{__('Payment Date')}} </th>
+                                        <th scope="col" class="table-th"> {{__('Payment Method')}} </th>
+                                        <th scope="col" class="table-th"> {{__('Card')}} </th>
                                     </tr>
                                 </thead>
 
@@ -53,6 +55,8 @@
                                             <td class="px-6 py-4">{{ $sale->voucherHeader->paketVoucher->name }}</td>
                                             <td class="px-6 py-4">{{ number_format($sale->amount) }}</td>
                                             <td class="px-6 py-4">{{ $sale->created_at->format('Y-m-d') }}</td>
+                                            <td class="px-6 py-4">{{ $sale->payment_method }}</td>
+                                            <td class="px-6 py-4">{{ $sale->no_card }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
