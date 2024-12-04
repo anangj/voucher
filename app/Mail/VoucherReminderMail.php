@@ -21,10 +21,10 @@ class VoucherReminderMail extends Mailable
      *
      * @return void
      */
-    public function __construct($voucher, $messageContent)
+    public function __construct($voucher)
     {
         $this->voucher = $voucher;
-        $this->messageContent = $messageContent;
+        // $this->messageContent = $messageContent;
     }
 
     public function build()
@@ -32,42 +32,7 @@ class VoucherReminderMail extends Mailable
         return $this->view('emails.voucher-reminder')
                     ->subject('Voucher Expiry Reminder')
                     ->with([
-                        'voucher' => $this->voucher,
-                        'data' => $this->messageContent
+                        'data' => $this->voucher,
                     ]);
     }
-
-    // /**
-    //  * Get the message envelope.
-    //  *
-    //  * @return \Illuminate\Mail\Mailables\Envelope
-    //  */
-    // public function envelope()
-    // {
-    //     return new Envelope(
-    //         subject: 'Voucher Reminder Mail',
-    //     );
-    // }
-
-    // /**
-    //  * Get the message content definition.
-    //  *
-    //  * @return \Illuminate\Mail\Mailables\Content
-    //  */
-    // public function content()
-    // {
-    //     return new Content(
-    //         view: 'view.name',
-    //     );
-    // }
-
-    // /**
-    //  * Get the attachments for the message.
-    //  *
-    //  * @return array
-    //  */
-    // public function attachments()
-    // {
-    //     return [];
-    // }
 }

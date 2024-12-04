@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reminder;
-use App\Http\Requests\StoreReminderRequest;
-use App\Http\Requests\UpdateReminderRequest;
+use App\Jobs\SendVoucherReminderJob;
 use App\Models\VoucherHeader;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VoucherReminderMail;
 use Illuminate\Support\Facades\Log;
 
 class ReminderController extends Controller
@@ -16,31 +12,30 @@ class ReminderController extends Controller
     public function sendVoucherReminders()
     {
         // Handle reminders in a reusable way
-        $this->processReminders(1, Carbon::now()->addMonth(), 'reminder_1');
-        $this->processReminders(2, Carbon::now()->addDays(7), 'reminder_2');
-        $this->processReminders(3, Carbon::now()->addDay(), 'reminder_3');
+        $this->processReminders(1, Carbon::now()->addMonth()->endOfDay(), 'reminder_1', 'last_reminder_sent_at');
+        $this->processReminders(2, Carbon::now()->addDays(7)->endOfDay(), 'reminder_2', 'last_reminder_sent_at');
+        $this->processReminders(3, Carbon::now()->addDay()->endOfDay(), 'reminder_3', 'last_reminder_sent_at');
     }
 
     /**
      * Reusable function to process reminders
      */
-    private function processReminders($reminderNumber, $date, $reminderField)
+    private function processReminders($reminderNumber, $date, $reminderField, $lastReminderAt)
     {
         try {
-            $dateFormatted = $date->format('Y-m-d');
             
             // Fetch voucher headers that meet the expiry and reminder conditions
             $vouchers = VoucherHeader::with('paketVoucher', 'patient')
-                ->where('expiry_date', $dateFormatted)
+                ->where('expiry_date', $date)
                 ->where($reminderField, false)
                 ->get();
 
             foreach ($vouchers as $voucher) {
-                $this->sendReminder($voucher, $voucher); // Send the reminder email
+                SendVoucherReminderJob::dispatch($voucher); // send reminder email
 
                 // Update the reminder and last_reminder_sent_at fields
                 $voucher->$reminderField = true;
-                $voucher->last_reminder_sent_at = Carbon::now();
+                $voucher->$lastReminderAt = Carbon::now();
                 $voucher->save();
             }
 
@@ -51,16 +46,6 @@ class ReminderController extends Controller
         }
     }
 
-    /**
-     * Send reminder email to the patient
-     */
-    private function sendReminder($voucher, $data)
-    {
-        // Assuming you have a Mailable class set up to send the reminder
-        Mail::to($voucher->patient->email)->send(new VoucherReminderMail($voucher, $data));
-    }
-
-
     public function updateExpiredVoucher()
     {
         try {
@@ -69,7 +54,6 @@ class ReminderController extends Controller
 
             // Retrieve vouchers with expiry date equal to yesterday
             $vouchers = VoucherHeader::where('expiry_date', $date)->get();
-            // dd($vouchers);
 
             // Update the status of each voucher to 'expired'
             foreach ($vouchers as $voucher) {

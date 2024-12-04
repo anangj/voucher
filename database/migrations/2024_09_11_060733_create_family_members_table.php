@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('family_members', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('patient_id');  // Foreign key
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->date('birthday')->nullable();
             $table->string('relationship')->nullable();  // e.g., father, mother
             $table->string('phone')->nullable();
