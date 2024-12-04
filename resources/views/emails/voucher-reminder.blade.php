@@ -79,8 +79,8 @@
         <div class="content">
             <p>Dear <strong>{{ $data->patient->name }}</strong>,</p>
 
-            <p>We would like to remind you that your voucher <strong>{{$data->paketVoucher->name}}</strong> for  is set to expire on /n
-                <strong>{{ $data->expiry_date }}</strong>.
+            <p>We would like to remind you that your voucher <strong>{{$data->paketVoucher->name}}</strong> for  is set to expire on
+                <strong>{{ \Carbon\Carbon::parse($data->expiry_date)->format('Y-m-d') }}</strong>.
             </p>
 
             <p>Please make sure to redeem your voucher before the expiration date to avoid losing it.</p>
@@ -89,7 +89,6 @@
 
         <div class="footer">
             <p>If you have any questions, feel free to contact us at support@gmail.com.</p>
-            {{-- <p>&copy; 2024 Clinic Name. All rights reserved.</p> --}}
         </div>
     </div>
 </body>
