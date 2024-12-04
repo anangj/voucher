@@ -20,12 +20,12 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // Call the controller method directly
             app(\App\Http\Controllers\ReminderController::class)->sendVoucherReminders();
-        })->everyMinute();
+        })->dailyAt('06:00');
 
         $schedule->call(function () {
             // Call the controller method directly
             app(\App\Http\Controllers\ReminderController::class)->updateExpiredVoucher();
-        })->everyMinute();
+        })->dailyAt('00:05');
     }
 
     /**
