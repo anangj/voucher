@@ -309,13 +309,13 @@
                     // Retrieve the patient data from the table row
                     const row = event.target.closest('tr');
                     const patientData = {
-                        no_rm: row.querySelector('td:nth-child(2)').innerText,
-                        name_real: row.querySelector('td:nth-child(3)').innerText,
-                        tgl_lahir: row.querySelector('td:nth-child(4)').innerText,
-                        phone: row.querySelector('td:nth-child(5)').innerText,
-                        email: row.querySelector('td:nth-child(6)').innerText,
-                        sex: row.querySelector('td:nth-child(7)').innerText,
-                        tgl_kunjungan_terakhir: row.querySelector('td:nth-child(8)').innerText,
+                        no_rm: row.querySelector('td:nth-child(1)').innerText,
+                        name_real: row.querySelector('td:nth-child(2)').innerText,
+                        tgl_lahir: row.querySelector('td:nth-child(3)').innerText,
+                        phone: row.querySelector('td:nth-child(4)').innerText,
+                        email: row.querySelector('td:nth-child(5)').innerText,
+                        sex: row.querySelector('td:nth-child(6)').innerText,
+                        tgl_kunjungan_terakhir: row.querySelector('td:nth-child(7)').innerText,
                     };
 
                     // Check if the patient is already selected
