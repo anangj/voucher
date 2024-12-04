@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             // Call the controller method directly
             app(\App\Http\Controllers\ReminderController::class)->updateExpiredVoucher();
-        })->dailyAt('00:05');
+        })->everyMinute();
     }
 
     /**
