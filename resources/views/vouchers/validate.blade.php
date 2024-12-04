@@ -35,8 +35,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="font-semibold block">{{ __('Nama Keluarga') }}</label>
-                        <input type="text" value="{{ $family }}" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
+                        <label class="font-semibold block">{{ __('Nama Pasien') }}</label>
+                        <input type="text" value="{{ $patient }}" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
                     </div>
 
                     <div class="mb-4">
@@ -58,6 +58,11 @@
                     </div>
 
                     <div class="mb-4">
+                        <label class="font-semibold block">{{ __('Nama Keluarga') }}</label>
+                        <input type="text" value="{{ $family }}" class="form-control w-full bg-gray-100 border border-gray-300 rounded-md" readonly>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="font-semibold block">{{ __('Sisa Voucher:') }}</label>
                         <input type="text" value="{{ $remainingUses }}" class="form-input w-12 bg-red-100 border border-red-300 rounded-md text-center text-red-600" readonly>
                     </div>
@@ -70,7 +75,7 @@
                     <thead class="bg-gray-200">
                         <tr>
                             {{-- <th class="border border-gray-300 px-4 py-2">{{ __('No.') }}</th> --}}
-                            <th class="border border-gray-300 px-4 py-2">{{ __('Nama Pasien') }}</th>
+                            <th class="border border-gray-300 px-4 py-2">{{ __('Nama Pengguna Voucher') }}</th>
                             {{-- <th class="border border-gray-300 px-4 py-2">{{ __('Tanggal Lahir') }}</th>
                             <th class="border border-gray-300 px-4 py-2">{{ __('No. Telepon') }}</th> --}}
                             <th class="border border-gray-300 px-4 py-2">{{ __('No Voucher Terpakai') }}</th>

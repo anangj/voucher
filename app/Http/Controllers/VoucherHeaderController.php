@@ -544,19 +544,6 @@ class VoucherHeaderController extends Controller
         // Fetch all voucher details for the given header
         $patientVouchers = $voucherHeader->voucherDetail;
 
-        // $patientVouchers = VoucherDetail::with('voucherHeader') // Assuming a relationship is defined
-        //         ->whereHas('voucherHeader', function ($query) use ($voucherNo) {
-        //             $query->where('voucher_header_no', $voucherNo);
-        //         })
-        //         ->get();
-
-        // Find all vouchers for the patient
-        // $patientVouchers = VoucherDetail::whereHas('voucherHeader', function($query) use ($voucherNo) {
-        //     $query->where('voucher_no', $voucherNo);
-        // })->get();
-
-        // dd($patientVouchers);
-
         if ($patientVouchers->isEmpty()) {
             return back()->with('error', 'No vouchers found for this patient.');
         }
@@ -568,25 +555,15 @@ class VoucherHeaderController extends Controller
         // Remaining voucher
         $remainingVouchers = $patientVouchers->where('is_used', false);
 
-        // dd($remainingVouchers);
-
         // Calculate total remaining uses
         $totalRemainingUses = $remainingVouchers->count();
-        // dd($totalRemainingUses);
 
-        // Calculate total remaining uses across all vouchers
-        // $totalRemainingUses = $totalVoucher - count($remainingVouchers);
-        // dd($totalRemainingUses);
 
         // Handle if no remaining uses
         if ($totalRemainingUses <= 0) {
             return back()->with('error', 'All vouchers have been used.');
         }
 
-        // $data = Patient::with('familyMember')->where('id', $patientId)->get();
-        
-
-        // $voucherDetails = VoucherHeader::with('voucherDetail', 'patient', 'paketVoucher', 'patient.familyMember')->findOrFail($voucher_header_id);
 
         // Fetch detailed voucher usage history
         $usedVouchers = VoucherDetail::with([
@@ -598,31 +575,8 @@ class VoucherHeaderController extends Controller
             ->where('is_used', true) // Only used vouchers
             ->get();
 
-        // dd($usedVouchers);
-
-        // $table =  VoucherDetail::with([
-        //             'voucherHeader.patient', // Join the 'patients' table through 'voucher_headers'
-        //             'voucherHeader.patient.familyMember', // Join the 'family_members' table through 'patients'
-        //             'voucherHistories' // Join the 'voucher_histories' table through 'voucher_details'
-        //         ])
-        //         ->whereHas('voucherHeader.patient', function ($query) use ($patientId) {
-        //             $query->where('id', $patientId); // Filter by patient ID
-        //         })
-        //         ->where('is_used', true) // Filter for used vouchers
-        //         ->get();
-        
-
-        // return view('vouchers.validate', [
-        //     'data' => $voucherDetails,
-        //     'tables' => $table,
-        //     'remainingUses' => $totalRemainingUses,
-        //     'packageName' => $packageName,
-        //     'voucherNo' => $voucherNo,
-        //     'purchaseDate' => $purchaseDate,
-        //     'expiryDate' => $expiryDate,
-        //     'patients' => $patientVouchers
-        // ]);
         $family = $voucherHeader->patient->familyMember->name ?? '';
+        
         // Pass data to the view
         return view('vouchers.validate', [
             'family' => $family,
@@ -632,7 +586,7 @@ class VoucherHeaderController extends Controller
             'voucherNo' => $voucherNo, // Voucher number
             'purchaseDate' => $voucherHeader->purchase_date, // Purchase date
             'expiryDate' => $voucherHeader->expiry_date, // Expiry date
-            // 'patients' => $patientVouchers // All vouchers for the header
+            'patient' => $voucherHeader->patient->name
         ]);
     }
 
