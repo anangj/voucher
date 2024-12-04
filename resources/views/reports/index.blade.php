@@ -43,7 +43,7 @@
                                         <th scope="col" class="table-th"> {{__('Price')}} </th>
                                         <th scope="col" class="table-th"> {{__('Payment Date')}} </th>
                                         <th scope="col" class="table-th"> {{__('Payment Method')}} </th>
-                                        <th scope="col" class="table-th"> {{__('Card')}} </th>
+                                        <th scope="col" class="table-th"> {{__('Note')}} </th>
                                     </tr>
                                 </thead>
 

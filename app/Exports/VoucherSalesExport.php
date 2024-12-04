@@ -20,7 +20,7 @@ class VoucherSalesExport implements FromArray, WithHeadings
                 'Price' => number_format($sale->amount),
                 'Payment Date' => $sale->created_at->format('Y-m-d'),
                 'Payment Method' => $sale->payment_method,
-                'Card' => $sale->no_card
+                'Note' => $sale->no_card
             ];
         }
 
@@ -36,7 +36,7 @@ class VoucherSalesExport implements FromArray, WithHeadings
             'Price',
             'Payment Date',
             'Payment Method',
-            'Card'
+            'Note'
         ];
     }
 }
